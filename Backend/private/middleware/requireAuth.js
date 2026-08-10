@@ -1,0 +1,22 @@
+import jwt from "jsonwebtoken";
+import User from "../../shared/models/User.js";
+
+// Verifies the JWT in the httpOnly cookie and attaches the user to req.
+// Runs in front of every single private route.
+export async function requireAuth(req, res, next) {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ error: "Not authenticated." });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-passwordHash -twoFactorSecret");
+    if (!user) return res.status(401).json({ error: "Not authenticated." });
+
+    req.user = user;
+    next();
+  } catch (err) {
+    // Same generic message for expired AND tampered tokens — don't hand an
+    // attacker free debugging information about which one it was.
+    return res.status(401).json({ error: "Session invalid or expired." });
+  }
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Aarav Krishnan — Cloud & Creative Engineer</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav id="navbar">
+  <div class="logo"><span id="navLogo">AK</span><span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#home" data-sec="home">Home</a></li>
+    <li><a href="#about" data-sec="about">About</a></li>
+    <li><a href="#skills" data-sec="skills">Skills</a></li>
+    <li><a href="#projects" data-sec="projects">Projects</a></li>
+    <li><a href="#certs" data-sec="certs">Certificates</a></li>
+    <li><a href="#contact" data-sec="contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="cmd-btn" id="searchBtn">⌘K Search</div>
+    <div class="theme-toggle" id="themeToggle" title="Toggle theme">◐</div>
+  </div>
+</nav>
+
+<section class="hero" id="home">
+  <div class="container hero-grid">
+    <div>
+      <div class="eyebrow" id="heroEyebrow">Cloud & Creative Engineering</div>
+      <h1 class="hero-title" id="heroHeadline">Building resilient systems<br>with <em>elegant</em> craft.</h1>
+      <div class="rotating-wrap"><b>Currently working as a</b> <span id="rotate-role">Cloud Engineer</span></div>
+      <p class="desc" id="heroDesc"></p>
+      <div class="cta-row" id="heroButtons"></div>
+    </div>
+
+    <div class="id-card reveal" id="idCard">
+  <svg id="idSvg" viewBox="0 0 300 300" fill="none">
+    <circle cx="150" cy="150" r="90" stroke="var(--border)" stroke-width="1"/>
+    <g class="pulse-line">
+      <line x1="60" y1="150" x2="240" y2="150" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 6"/>
+      <line x1="150" y1="60" x2="150" y2="240" stroke="var(--accent)" stroke-width="1" stroke-dasharray="4 6"/>
+    </g>
+    <g class="float-particle"><circle cx="100" cy="100" r="5" fill="var(--brown)"/></g>
+    <g class="float-particle2"><circle cx="205" cy="95" r="4" fill="var(--accent)"/></g>
+    <g class="float-particle3"><circle cx="205" cy="205" r="6" fill="var(--brown-dark)"/></g>
+    <g class="float-particle"><circle cx="95" cy="205" r="3.5" fill="var(--accent)"/></g>
+    <text id="heroBadgeText" x="150" y="168" text-anchor="middle" font-family="Fraunces, serif" font-size="64" fill="var(--brown-dark)" font-weight="500">AK</text>
+  </svg>
+
+  <img id="idPhotoFull" style="display:none;" alt="Profile photo">
+
+  <div class="id-tag"><span>ID · CLOUD-0417</span><span>EST. 2019</span></div>
+</div>
+</section>
+
+<div class="chapter"><div class="cline">About</div></div>
+
+<section id="about">
+  <div class="container about-grid">
+    <div class="reveal">
+      <div class="eyebrow">About</div>
+      <h2>Engineering with intent, designing with care.</h2>
+      <p id="aboutP1" style="color:var(--text-soft); margin-top:18px; font-size:.96rem;"></p>
+      <p id="aboutP2" style="color:var(--text-soft); margin-top:16px; font-size:.96rem;"></p>
+      <div class="stat-row" id="aboutStats"></div>
+    </div>
+    <div class="timeline reveal" id="aboutTimeline"></div>
+  </div>
+</section>
+
+<div class="chapter"><div class="cline">Capabilities</div></div>
+
+<section id="skills" style="background:var(--bg-alt);">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Capabilities</div>
+      <h2>A stack built for the cloud era.</h2>
+      <p>Search for a specific skill, or filter by discipline to see how it connects to real project work.</p>
+    </div>
+    <div class="skill-search"><input type="text" id="skillSearch" placeholder="Search a skill — e.g. Docker, Figma, Kubernetes..."></div>
+    <div class="filter-row" id="filterRow">
+      <div class="filter-chip active" data-f="all">All</div>
+      <div class="filter-chip" data-f="cloud">Cloud &amp; DevOps</div>
+      <div class="filter-chip" data-f="dev">Development</div>
+      <div class="filter-chip" data-f="design">Design</div>
+      <div class="filter-chip" data-f="sec">Security</div>
+    </div>
+    <div class="skill-groups" id="skillGroups"></div>
+    <div class="skill-empty" id="skillEmpty">No skill matches "<span id="skillEmptyTerm"></span>". Try a different term.</div>
+  </div>
+</section>
+
+<div class="chapter"><div class="cline">Work</div></div>
+
+<section id="projects">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Selected Work</div>
+      <h2>Projects that shipped, and what they taught me.</h2>
+      <p>Click a project to expand its architecture, stack, and outcomes.</p>
+    </div>
+    <div id="projectList"></div>
+  </div>
+</section>
+
+<div class="chapter"><div class="cline">Credentials</div></div>
+
+<section id="certs" style="background:var(--bg-alt);">
+  <div class="container">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Verified Credentials</div>
+      <h2>Certifications, verified.</h2>
+      <p>Click a card to flip and see the credential details.</p>
+    </div>
+    <div class="cert-grid" id="certGrid"></div>
+  </div>
+</section>
+
+<div class="chapter"><div class="cline">Contact</div></div>
+
+<section id="contact">
+  <div class="container contact-grid">
+    <div class="reveal">
+      <div class="eyebrow">Contact</div>
+      <h2>Let's build something together.</h2>
+      <p style="color:var(--text-soft); margin:18px 0 34px; font-size:.95rem;">Open to cloud architecture, automation, and product engineering roles or collaborations.</p>
+      <form id="contactForm">
+        <div class="field"><label>Name</label><input type="text" id="cf-name" placeholder="Your name" required></div>
+        <div class="field"><label>Email</label><input type="email" id="cf-email" placeholder="you@company.com" required></div>
+        <div class="field"><label>Message</label><textarea id="cf-message" rows="4" placeholder="Tell me about the project..." required></textarea></div>
+        <button class="btn btn-primary" type="submit">Send Message</button>
+      </form>
+    </div>
+    <div class="reveal"><ul class="contact-list" id="contactList"></ul></div>
+  </div>
+</section>
+
+<footer>
+  <div class="container"><p>© 2026 Aarav Krishnan. Designed and engineered with intent.</p></div>
+</footer>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" id="searchModalInput" placeholder="Search skills, projects, certificates...">
+    <div class="search-results" id="searchResults"></div>
+    <div class="search-hint">Press <kbd>Esc</kbd> to close</div>
+  </div>
+</div>
+
+<div id="toTop">↑</div>
+
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
