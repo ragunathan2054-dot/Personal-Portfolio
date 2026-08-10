@@ -1,6 +1,3 @@
-// This MUST be the first line in the entire file. Side-effect imports run in
-// the order they're written, so putting this first guarantees process.env is
-// populated from .env BEFORE any other file (like cloudinary.js) tries to read it.
 import "dotenv/config";
 
 import express from "express";
@@ -20,17 +17,11 @@ import privateRoutes from "./private/private.routes.js";
 
 const app = express();
 
-const allowedOrigins = [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN].filter(Boolean);
 app.use(helmetMiddleware);
 app.use(cors({
-  origin(origin, callback) {
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error("CORS policy: Origin not allowed"));
-  },
+  origin: [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN],
   credentials: true,
 }));
-app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 app.use(sanitizeMiddleware);
