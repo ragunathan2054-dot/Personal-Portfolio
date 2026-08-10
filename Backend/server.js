@@ -10,10 +10,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.js";
 import { seedAdmin } from "./shared/utils/seedAdmin.js";
 import {
-  helmetMiddleware,
-  generalLimiter,
-  sanitizeMiddleware,
-  hppMiddleware,
+  helmetMiddleware, generalLimiter, sanitizeMiddleware, hppMiddleware,
 } from "./shared/middleware/security.js";
 import { errorHandler } from "./shared/middleware/errorHandler.js";
 import { issueCsrfToken } from "./private/middleware/csrf.js";
@@ -23,21 +20,16 @@ import privateRoutes from "./private/private.routes.js";
 
 const app = express();
 
-const allowedOrigins = [
-  process.env.PUBLIC_ORIGIN,
-  process.env.ADMIN_ORIGIN,
-].filter(Boolean);
+const allowedOrigins = [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN].filter(Boolean);
 app.use(helmetMiddleware);
-app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      callback(new Error("CORS policy: Origin not allowed"));
-    },
-    credentials: true,
-  }),
-);
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error("CORS policy: Origin not allowed"));
+  },
+  credentials: true,
+}));
 app.options("*", cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
