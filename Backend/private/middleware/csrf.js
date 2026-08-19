@@ -5,7 +5,8 @@ export function issueCsrfToken(req, res, next) {
   res.cookie("XSRF-TOKEN", token, {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: "lax",
+    domain: process.env.NODE_ENV === "production" ? ".yourname.com" : undefined,
     path: "/",
   });
   next();

@@ -14,11 +14,8 @@ function setAuthCookie(res, token) {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    // "none" is required once frontend and backend live on different domains
-    // in production (Netlify + Render). "lax" is used locally where both run
-    // on localhost — SameSite=None requires Secure, which requires HTTPS,
-    // which local dev doesn't have.
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: "lax", // same root domain now, so "lax" works — no longer need "none"
+    domain: process.env.NODE_ENV === "production" ? ".yourname.com" : undefined, // shares cookie across all subdomains
     maxAge: 2 * 60 * 60 * 1000,
   });
 }
