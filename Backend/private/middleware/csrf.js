@@ -7,6 +7,10 @@ export function issueCsrfToken(req, res, next) {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
+    domain:
+      process.env.NODE_ENV === "production"
+        ? "ragunathan-back.online"
+        : undefined,
     path: "/",
   });
 
