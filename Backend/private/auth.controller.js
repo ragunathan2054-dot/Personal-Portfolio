@@ -14,12 +14,14 @@ function setAuthCookie(res, token) {
   res.cookie("token", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax", // same root domain now, so "lax" works — no longer need "none"
-    domain: process.env.NODE_ENV === "production" ? ".yourname.com" : undefined, // shares cookie across all subdomains
+    sameSite: "lax",
+    domain: process.env.NODE_ENV === "production"
+      ? ".ragunathan-back.online"
+      : undefined,
+    path: "/",
     maxAge: 2 * 60 * 60 * 1000,
   });
 }
-
 export async function login(req, res) {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email.toLowerCase() });
