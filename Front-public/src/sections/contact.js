@@ -36,8 +36,6 @@ export function renderContact(contact) {
       try {
         data = await res.json();
       } catch {
-        // Server returned something that wasn't JSON (e.g. a raw 404 HTML page) —
-        // this tells us the route itself likely isn't reachable.
         throw new Error(`Server returned ${res.status} — check that the backend is running and /contact route exists`);
       }
 
