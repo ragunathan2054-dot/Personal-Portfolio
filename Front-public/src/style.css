@@ -60,7 +60,7 @@ nav.scrolled{ border-bottom:1px solid var(--border); }
 .hero p.desc{ max-width:480px; color:var(--text-soft); font-size:1.02rem; margin-bottom:40px; }
 .cta-row{ display:flex; gap:16px; flex-wrap:wrap; }
 .id-card{ position:relative; width:100%; max-width:640px; aspect-ratio:1/1; border-radius:28px; background:linear-gradient(160deg, var(--white), var(--bg-alt)); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; overflow:hidden; margin-left:auto; }
-.id-card svg{ width:88%; height:88%; }
+.id-card svg{ width:78%; height:78%; }
 .float-particle{ animation:float 6s ease-in-out infinite; }
 .float-particle2{ animation:float 7.5s ease-in-out infinite .8s; }
 .float-particle3{ animation:float 5.2s ease-in-out infinite 1.6s; }
