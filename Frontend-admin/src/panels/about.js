@@ -13,6 +13,7 @@ export function renderAboutPanel(content) {
     <div class="card">
       <div class="card-head"><h3>Stats row</h3></div>
       <div class="stat-grid" id="statGrid"></div>
+      <button class="add-row-btn" id="addStatBtn"><span class="plus">+</span> Add stat</button>
     </div>
 
     <div class="card">
@@ -29,26 +30,42 @@ export function renderAboutPanel(content) {
 
   function renderStats() {
     document.getElementById("statGrid").innerHTML = stats
-      .map((s, i) => `<div class="stat-edit"><label>Number</label><input data-i="${i}" data-k="number" value="${s.number}"><input class="label-input" data-i="${i}" data-k="label" value="${s.label}"></div>`)
+      .map(
+        (s, i) => `
+        <div class="stat-edit">
+          <label>Number</label>
+          <input data-i="${i}" data-k="number" value="${s.number || ""}">
+          <input class="label-input" data-i="${i}" data-k="label" value="${s.label || ""}">
+          <button class="remove-btn" data-i="${i}" style="margin-top:6px;">Remove</button>
+        </div>`
+      )
       .join("");
+
     document.querySelectorAll("#statGrid input").forEach((input) =>
       input.addEventListener("input", () => { stats[input.dataset.i][input.dataset.k] = input.value; })
     );
+    document.querySelectorAll("#statGrid .remove-btn").forEach((btn) =>
+      btn.addEventListener("click", () => { stats.splice(Number(btn.dataset.i), 1); renderStats(); })
+    );
   }
+
   function renderTimeline() {
     document.getElementById("timelineRows").innerHTML = timeline
-      .map((t, i) => `
-        <div class="list-row">
-          <div class="list-fields">
-            <div class="row2">
-              <div class="field"><label>Years</label><input data-i="${i}" data-k="years" value="${t.years}"></div>
-              <div class="field"><label>Role title</label><input data-i="${i}" data-k="title" value="${t.title}"></div>
-            </div>
-            <div class="field"><label>Description</label><textarea data-i="${i}" data-k="description">${t.description}</textarea></div>
+      .map(
+        (t, i) => `
+      <div class="list-row">
+        <div class="list-fields">
+          <div class="row2">
+            <div class="field"><label>Years</label><input data-i="${i}" data-k="years" value="${t.years || ""}"></div>
+            <div class="field"><label>Role title</label><input data-i="${i}" data-k="title" value="${t.title || ""}"></div>
           </div>
-          <button class="remove-btn" data-i="${i}">Remove</button>
-        </div>`)
+          <div class="field"><label>Description</label><textarea data-i="${i}" data-k="description">${t.description || ""}</textarea></div>
+        </div>
+        <button class="remove-btn" data-i="${i}">Remove</button>
+      </div>`
+      )
       .join("");
+
     document.querySelectorAll("#timelineRows input, #timelineRows textarea").forEach((f) =>
       f.addEventListener("input", () => { timeline[f.dataset.i][f.dataset.k] = f.value; })
     );
@@ -56,8 +73,14 @@ export function renderAboutPanel(content) {
       btn.addEventListener("click", () => { timeline.splice(Number(btn.dataset.i), 1); renderTimeline(); })
     );
   }
+
   renderStats();
   renderTimeline();
+
+  document.getElementById("addStatBtn").addEventListener("click", () => {
+    stats.push({ number: "", label: "" });
+    renderStats();
+  });
 
   document.getElementById("addTimelineBtn").addEventListener("click", () => {
     timeline.push({ years: "", title: "", description: "" });

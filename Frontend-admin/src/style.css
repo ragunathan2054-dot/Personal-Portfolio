@@ -113,6 +113,8 @@ a{ color:inherit; text-decoration:none; }
 
 .stat-grid{ display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; }
 .stat-edit{ border:1px solid var(--border); border-radius:10px; padding:12px; }
+.stat-edit .remove-btn{ all:unset; cursor:pointer; color:var(--text-faint); font-size:.68rem; font-weight:600; display:block; }
+.stat-edit .remove-btn:hover{ color:var(--danger); }
 .stat-edit label{ font-size:.68rem; color:var(--text-faint); text-transform:uppercase; letter-spacing:.05em; }
 .stat-edit input{ border:none; background:transparent; font-family:var(--serif); font-size:1.3rem; padding:2px 0; width:100%; }
 .stat-edit input.label-input{ font-family:var(--sans); font-size:.78rem; color:var(--text-soft); }

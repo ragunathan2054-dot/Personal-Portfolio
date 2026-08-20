@@ -24,7 +24,7 @@ export function renderHeroPanel(content) {
             <button class="btn btn-ghost btn-sm" id="removePhotoBtn" type="button" style="${site.heroPhotoUrl ? "" : "display:none;"}">Remove photo</button>
           </div>
         </div>
-        <div class="hint">If no photo is uploaded, the badge text below is shown instead.</div>
+        <div class="hint">Upload a square photo (800×800px or larger works best) — it fills the box automatically.</div>
       </div>
 
       <div class="field"><label>Badge text (shown when there's no photo)</label><input type="text" id="site-badge" value="${site.heroBadgeText || "AK"}"></div>
@@ -38,13 +38,26 @@ export function renderHeroPanel(content) {
     </div>
 
     <div class="card">
+      <div class="card-head"><h3>Resume</h3><span class="sub">Downloadable from the hero button</span></div>
+      <div class="field"><label>Resume button label</label><input type="text" id="h-resumeLabel" value="${hero.resumeButtonLabel || "Download Resume"}"></div>
+      <div class="field">
+        <label>Resume file (PDF)</label>
+        <div id="resumeStatus" style="margin-bottom:8px; font-size:.82rem; color:var(--text-soft);">
+          ${hero.resumeUrl ? `Current file: <a href="${hero.resumeUrl}" target="_blank" style="color:var(--brown-dark);">view current resume</a>` : "No resume uploaded yet"}
+        </div>
+        <input type="file" id="resumeInput" accept="application/pdf" style="display:none;">
+        <button class="btn btn-ghost btn-sm" id="uploadResumeBtn" type="button">Upload PDF</button>
+      </div>
+    </div>
+
+    <div class="card">
       <div class="card-head"><h3>Rotating job titles</h3></div>
       <div class="chip-row" id="roleChips"></div>
       <div class="add-inline"><input type="text" id="roleInput" placeholder="Add another title"><button class="btn btn-ghost btn-sm" id="addRoleBtn" type="button">Add</button></div>
     </div>
 
     <div class="card">
-      <div class="card-head"><h3>Buttons</h3></div>
+      <div class="card-head"><h3>Other buttons</h3><span class="sub">Shown next to the Resume button</span></div>
       <div id="buttonRows"></div>
       <button class="add-row-btn" id="addButtonBtn" type="button"><span class="plus">+</span> Add button</button>
     </div>
@@ -55,6 +68,7 @@ export function renderHeroPanel(content) {
   let roles = [...(hero.roles || [])];
   let buttons = [...(hero.buttons || [])];
   let heroPhotoUrl = site.heroPhotoUrl || "";
+  let resumeUrl = hero.resumeUrl || "";
 
   function renderChips() {
     document.getElementById("roleChips").innerHTML = roles
@@ -97,22 +111,21 @@ export function renderHeroPanel(content) {
     renderButtons();
   });
 
+  function getCookie(name) {
+    return document.cookie.split("; ").find((r) => r.startsWith(name + "="))?.split("=")[1];
+  }
+
+  // Photo upload
   document.getElementById("uploadPhotoBtn").addEventListener("click", () => {
     document.getElementById("heroPhotoInput").click();
   });
-
   document.getElementById("heroPhotoInput").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const formData = new FormData();
     formData.append("image", file);
-
     try {
       const API_URL = import.meta.env.VITE_API_URL;
-      function getCookie(name) {
-        return document.cookie.split("; ").find((r) => r.startsWith(name + "="))?.split("=")[1];
-      }
       const res = await fetch(`${API_URL}/upload`, {
         method: "POST",
         credentials: "include",
@@ -120,23 +133,47 @@ export function renderHeroPanel(content) {
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed — check the backend terminal for the real cause");
-
+      if (!res.ok) throw new Error(data.error || "Upload failed");
       heroPhotoUrl = data.url;
       document.getElementById("heroPhotoPreview").innerHTML = `<img src="${heroPhotoUrl}" style="width:100%; height:100%; object-fit:cover;">`;
       document.getElementById("removePhotoBtn").style.display = "inline-block";
       showToast("Photo uploaded — click Save to apply");
     } catch (err) {
       showToast(err.message, "error");
-      console.error("Upload error:", err);
     }
   });
-
   document.getElementById("removePhotoBtn").addEventListener("click", () => {
     heroPhotoUrl = "";
     document.getElementById("heroPhotoPreview").innerHTML = document.getElementById("site-badge").value || "AK";
     document.getElementById("removePhotoBtn").style.display = "none";
     showToast("Photo removed — click Save to apply");
+  });
+
+  // Resume upload — same pattern, different accepted file type
+  document.getElementById("uploadResumeBtn").addEventListener("click", () => {
+    document.getElementById("resumeInput").click();
+  });
+  document.getElementById("resumeInput").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("image", file); // field name stays "image" — the backend route accepts any file here, filtered by mimetype
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
+      const res = await fetch(`${API_URL}/upload`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "X-CSRF-Token": getCookie("XSRF-TOKEN") },
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      resumeUrl = data.url;
+      document.getElementById("resumeStatus").innerHTML = `Current file: <a href="${resumeUrl}" target="_blank" style="color:var(--brown-dark);">view current resume</a>`;
+      showToast("Resume uploaded — click Save to apply");
+    } catch (err) {
+      showToast(err.message, "error");
+    }
   });
 
   document.getElementById("saveHeroBtn").addEventListener("click", async () => {
@@ -149,6 +186,8 @@ export function renderHeroPanel(content) {
       eyebrow: document.getElementById("h-eyebrow").value,
       headline: document.getElementById("h-headline").value,
       description: document.getElementById("h-desc").value,
+      resumeButtonLabel: document.getElementById("h-resumeLabel").value,
+      resumeUrl,
       roles, buttons,
     };
     await window.__saveContent({ site, hero });

@@ -7,14 +7,15 @@ const contentSchema = new mongoose.Schema({
     heroBadgeText: { type: String, default: "AK" },
     heroPhotoUrl: { type: String, default: "" }, // new — your real photo, shown instead of the initials badge
   },
-  hero: {
-    eyebrow: String,
-    headline: String,
-    description: String,
-    roles: [String],
-    buttons: [{ label: String, link: String }],
-    resumeUrl: String,
-  },
+hero: {
+  eyebrow: String,
+  headline: String,
+  description: String,
+  roles: [String],
+  resumeButtonLabel: { type: String, default: "Download Resume" },
+  resumeUrl: String,
+  buttons: [{ label: String, link: String }],
+},
   about: {
     paragraphs: [String],
     stats: [{ number: String, label: String }],
@@ -48,8 +49,8 @@ const contentSchema = new mongoose.Schema({
     },
   ],
   certificates: [
-    { name: String, issuer: String, credentialId: String, issued: String, expiry: String, logoUrl: String },
-  ],
+  { name: String, issuer: String, credentialId: String, issued: String, expiry: String, logoUrl: String, credentialUrl: String },
+],
   contact: {
     email: String,
     location: String,

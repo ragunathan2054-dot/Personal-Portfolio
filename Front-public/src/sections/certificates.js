@@ -9,6 +9,9 @@ export function renderCertificates(certs) {
       ? `<img src="${c.logoUrl}" alt="${c.issuer} logo">`
       : `<span class="logo-fallback">${c.issuer.slice(0, 8)}</span>`;
 
+    // "Verify Credential" is now a real <a> tag pointing at credentialUrl.
+    // stopPropagation keeps a click on the link from also toggling the card
+    // flip — it just opens the link cleanly in a new tab.
     card.innerHTML = `
       <div class="cert-inner">
         <div class="cert-face cert-front">
@@ -22,10 +25,21 @@ export function renderCertificates(certs) {
             <div class="idline">Issued: ${c.issued}</div>
             <div class="idline">Expires: ${c.expiry}</div>
           </div>
-          <span class="flip-hint">Verify Credential →</span>
+          ${
+            c.credentialUrl
+              ? `<a class="flip-hint verify-link" href="${c.credentialUrl}" target="_blank" rel="noopener noreferrer">Verify Credential →</a>`
+              : `<span class="flip-hint">Verify Credential →</span>`
+          }
         </div>
-      </div>`;
+      </div>
+    `;
+
     card.addEventListener("click", () => card.classList.toggle("flipped"));
+    const verifyLink = card.querySelector(".verify-link");
+    if (verifyLink) {
+      verifyLink.addEventListener("click", (e) => e.stopPropagation());
+    }
+
     certGrid.appendChild(card);
   });
 }

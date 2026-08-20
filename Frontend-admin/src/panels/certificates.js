@@ -17,6 +17,7 @@ export function renderCertificatesPanel(content) {
               <div class="field"><label>Issued</label><input data-k="issued" value="${c.issued || ""}"></div>
               <div class="field"><label>Expires</label><input data-k="expiry" value="${c.expiry || ""}"></div>
             </div>
+            <div class="field"><label>Verification link</label><input data-k="credentialUrl" value="${c.credentialUrl || ""}" placeholder="https://www.credly.com/..."><div class="hint">This is where "Verify Credential" on the public site sends visitors.</div></div>
           </div>
           <button class="remove-btn">Remove</button>
         </div>`)
@@ -35,7 +36,7 @@ export function renderCertificatesPanel(content) {
   render();
 
   document.getElementById("addCertBtn").addEventListener("click", () => {
-    certificates.push({ name: "", issuer: "", credentialId: "", issued: "", expiry: "", logoUrl: "" });
+    certificates.push({ name: "", issuer: "", credentialId: "", issued: "", expiry: "", logoUrl: "", credentialUrl: "" });
     render();
   });
 
