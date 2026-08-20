@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../../shared/models/User.js";
 
-// Verifies the JWT in the httpOnly cookie and attaches the user to req.
-// Runs in front of every single private route.
 export async function requireAuth(req, res, next) {
   try {
     const token = req.cookies.token;

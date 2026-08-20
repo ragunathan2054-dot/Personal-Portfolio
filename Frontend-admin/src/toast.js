@@ -1,5 +1,3 @@
-// One shared toast used by every save / delete / login / error action
-// across the whole admin dashboard, so nothing happens silently.
 export function showToast(message, type = "success") {
   const el = document.createElement("div");
   el.className = `toast toast-${type}`;

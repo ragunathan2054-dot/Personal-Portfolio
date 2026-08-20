@@ -12,9 +12,6 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Account-level lockout, separate from IP rate limiting.
-// Rate limiting blocks an IP; this blocks the ACCOUNT even if the attacker
-// switches IPs — the two protections cover different angles of brute force.
 userSchema.methods.isLocked = function () {
   return this.lockUntil && this.lockUntil > Date.now();
 };

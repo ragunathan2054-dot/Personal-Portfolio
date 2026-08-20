@@ -7,10 +7,6 @@ export async function getContentForEdit(req, res) {
   res.json(content);
 }
 
-// THE FIX: wrapping req.body in $set means MongoDB updates ONLY the fields
-// you send, leaving every other field untouched. Without $set, MongoDB
-// replaces the ENTIRE document with just what was sent — which is why saving
-// one panel was wiping out every other section before.
 export async function updateContent(req, res) {
   const content = await Content.findOneAndUpdate(
     {},

@@ -27,9 +27,6 @@ document.querySelectorAll(".navlist button[data-panel]").forEach((btn) =>
   btn.addEventListener("click", () => showPanel(btn.dataset.panel))
 );
 
-// Updates the sidebar's logo badge every time content is saved, so editing
-// "Nav logo text" in the Hero panel immediately reflects here too, not just
-// on the public site.
 function syncSidebarLogo() {
   const text = currentContent?.site?.logoText || "AK";
   document.getElementById("sidebarLogoMark").textContent = text;

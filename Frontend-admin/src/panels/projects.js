@@ -2,10 +2,6 @@ export function renderProjectsPanel(content) {
   let projects = [...(content.projects || [])];
   const el = document.getElementById("panel-projects");
   el.innerHTML = `<p class="lede">Each project card, in full detail.</p><div class="card" id="projList"></div><button class="add-row-btn" id="addProjBtn"><span class="plus">+</span> Add project</button><button class="btn btn-primary" id="saveProjBtn" style="margin-top:16px;">Save Projects</button>`;
-
-  // Defensive: if a project's stack/features was ever corrupted into a
-  // non-array (from data saved before the $set fix), this normalizes it
-  // instead of throwing and blanking the whole panel.
   function toArray(val) {
     if (Array.isArray(val)) return val;
     if (typeof val === "string" && val.trim()) return val.split(",").map((s) => s.trim());

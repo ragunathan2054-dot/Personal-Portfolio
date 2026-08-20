@@ -17,7 +17,7 @@ import { authLimiter } from "../shared/middleware/security.js";
 
 const router = express.Router();
 
-/* ---- AUTH ---- */
+
 router.post("/auth/login", authLimiter,
   body("email").isEmail().normalizeEmail(),
   body("password").isLength({ min: 8 }),
@@ -47,14 +47,14 @@ router.put("/auth/password", requireAuth, verifyCsrfToken,
   validate, changePassword
 );
 
-// NEW route
+
 router.put("/auth/email", requireAuth, verifyCsrfToken,
   body("newEmail").isEmail().normalizeEmail(),
   body("currentPassword").notEmpty(),
   validate, changeEmail
 );
 
-/* ---- CONTENT ---- */
+
 router.get("/content", requireAuth, getContentForEdit);
 
 router.put("/content", requireAuth, verifyCsrfToken,
@@ -66,11 +66,11 @@ router.put("/content", requireAuth, verifyCsrfToken,
   validate, updateContent
 );
 
-/* ---- MESSAGES ---- */
+
 router.get("/messages", requireAuth, getMessages);
 router.delete("/messages/:id", requireAuth, verifyCsrfToken, deleteMessage);
 
-/* ---- UPLOAD ---- */
+
 const storage = multer.memoryStorage();
 function fileFilter(req, file, cb) {
   const allowed = ["image/jpeg", "image/png", "image/webp", "application/pdf"];

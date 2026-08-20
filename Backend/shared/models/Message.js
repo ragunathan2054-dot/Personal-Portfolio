@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Stores messages submitted through the public Contact form.
+
 const messageSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },

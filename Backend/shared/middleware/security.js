@@ -27,8 +27,7 @@ export const generalLimiter = rateLimit({
   message: { error: "Too many requests. Please try again later." },
 });
 
-// Much stricter — only login/auth routes use this. This is the main defense
-// against someone guessing your password by brute force.
+
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
@@ -37,9 +36,6 @@ export const authLimiter = rateLimit({
   message: { error: "Too many login attempts. Try again in 15 minutes." },
 });
 
-// Strips $ and . from request data — blocks NoSQL injection like
-// { "email": { "$gt": "" } } from bypassing a login query.
 export const sanitizeMiddleware = mongoSanitize();
 
-// Blocks HTTP Parameter Pollution, e.g. ?role=user&role=admin.
 export const hppMiddleware = hpp();

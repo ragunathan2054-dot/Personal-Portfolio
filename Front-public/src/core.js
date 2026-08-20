@@ -45,9 +45,6 @@ export function initReveal() {
     );
   });
 }
-
-// Real search modal matching the site's own design — builds a searchable
-// index from skills, projects, and certificates once, then filters live as you type.
 export function initSearch(content) {
   const overlay = document.getElementById("searchOverlay");
   const input = document.getElementById("searchModalInput");
