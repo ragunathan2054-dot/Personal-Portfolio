@@ -11,7 +11,11 @@ export function renderProjects(projects) {
           <div class="p-tag">${p.tag}</div>
           <div class="p-title">${p.title}</div>
           <div class="p-desc">${p.desc}</div>
-          <div class="p-meta"><span>Status: ${p.status}</span><span>Version: ${p.version}</span><span>Commits: ${p.commits}</span></div>
+          <div class="p-meta">
+            <span>Status: ${p.status}</span>
+            <span>Version: ${p.version}</span>
+            <span>Commits: ${p.commits}</span>
+          </div>
         </div>
         <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">0${i + 1}</div>
       </div>
@@ -27,8 +31,12 @@ export function renderProjects(projects) {
             <h4 style="margin-top:14px;">Solution</h4><p>${p.solution}</p>
           </div>
         </div>
-        <div class="p-links"><a href="${p.demo}">Live Demo →</a><a href="${p.repo}">GitHub →</a></div>
-      </div>`;
+        <div class="p-links">
+          <a href="${p.demo}">Live Demo →</a>
+          <a href="${p.repo}">GitHub →</a>
+        </div>
+      </div>
+    `;
     card.addEventListener("click", () => {
       const wasOpen = card.classList.contains("open");
       document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));
@@ -40,13 +48,13 @@ export function renderProjects(projects) {
 
   if (projects.length > 3) {
     const moreBtn = document.createElement("div");
-    moreBtn.className = "skill-more-btn"; // reuses the same "show more" visual style on purpose
-    moreBtn.textContent = `Show ${projects.length - 3} more projects`;
+    moreBtn.className = "see-more-link";
+    moreBtn.textContent = "See more →";
     moreBtn.addEventListener("click", () => {
       const hidden = [...projectList.querySelectorAll(".project-card")].slice(3);
       const opening = hidden[0].style.display === "none";
       hidden.forEach((c) => (c.style.display = opening ? "" : "none"));
-      moreBtn.textContent = opening ? "Show less" : `Show ${projects.length - 3} more projects`;
+      moreBtn.textContent = opening ? "See less" : "See more →";
     });
     projectList.appendChild(moreBtn);
   }

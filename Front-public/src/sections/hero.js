@@ -12,8 +12,8 @@ export function renderHero(hero) {
   let html = "";
 
   if (hero.resumeUrl) {
-    html += `<a class="btn btn-primary" href="${escapeHtml(hero.resumeUrl)}" download target="_blank" rel="noopener noreferrer">${escapeHtml(hero.resumeButtonLabel || "Download Resume")}</a>`;
-  }
+  html += `<a class="btn btn-primary" href="${escapeHtml(hero.resumeUrl)}" download="resume.pdf">${escapeHtml(hero.resumeButtonLabel || "Download Resume")}</a>`;
+}
 
   html += (hero.buttons || [])
     .map((b) => `<a class="btn btn-ghost" href="${escapeHtml(b.link || "#")}">${escapeHtml(b.label)}</a>`)

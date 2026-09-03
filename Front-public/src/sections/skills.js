@@ -42,17 +42,18 @@ export function renderSkills(skills) {
       grid.appendChild(card);
     });
 
-    if (groupSkills.length > 3) {
-      const moreBtn = document.createElement("div");
-      moreBtn.className = "skill-more-btn";
-      moreBtn.textContent = `Show ${groupSkills.length - 3} more`;
-      moreBtn.addEventListener("click", () => {
-        group.classList.toggle("expanded");
-        moreBtn.textContent = group.classList.contains("expanded") ? "Show less" : `Show ${groupSkills.length - 3} more`;
-        applySkillFilters();
-      });
-      group.appendChild(moreBtn);
-    }
+  if (groupSkills.length > 3) {
+  const moreBtn = document.createElement("div");
+  moreBtn.className = "see-more-link";
+  moreBtn.textContent = "See more →";
+  moreBtn.addEventListener("click", () => {
+    group.classList.toggle("expanded");
+    moreBtn.textContent = group.classList.contains("expanded") ? "See less" : "See more →";
+    applySkillFilters();
+  });
+  group.appendChild(moreBtn);
+}
+
     skillGroups.appendChild(group);
   });
 
