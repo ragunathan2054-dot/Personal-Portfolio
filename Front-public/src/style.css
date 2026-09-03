@@ -131,7 +131,7 @@ nav.scrolled{ border-bottom:1px solid var(--border); }
 .p-desc{ color:var(--text-soft); font-size:.92rem; margin-top:10px; max-width:640px; }
 .p-meta{ display:flex; gap:22px; flex-wrap:wrap; margin-top:20px; font-family:var(--mono); font-size:.7rem; color:var(--text-soft); }
 .p-body{ max-height:0; overflow:hidden; transition:max-height .5s ease, margin-top .5s ease; }
-.project-card.open .p-body{ max-height:400px; margin-top:22px; }
+.project-card.open .p-body{ max-height:500px; margin-top:22px; }
 .p-body-inner{ border-top:1px solid var(--border); padding-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:24px; }
 .p-col h4{ font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--brown-dark); margin-bottom:8px; }
 .p-col p, .p-col li{ font-size:.86rem; color:var(--text-soft); }
