@@ -141,7 +141,41 @@ a{ color:inherit; text-decoration:none; }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 .toast-error{ background:var(--danger); }
 
+/* ---- Mobile menu toggle — hidden on desktop, shown only below 900px ---- */
+.menu-toggle{
+  display:none; all:unset; cursor:pointer; font-size:1.3rem; padding:6px 10px;
+  border-radius:8px; color:var(--text);
+}
+.menu-toggle:hover{ background:var(--bg-alt); }
+.topbar-left{ display:flex; align-items:center; gap:12px; }
+
+.mobile-overlay{
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999;
+}
+.mobile-overlay.open{ display:block; }
+
+.menu-toggle{
+  display:none; all:unset; cursor:pointer; font-size:1.3rem; padding:6px 10px;
+  border-radius:8px; color:var(--text);
+}
+.menu-toggle:hover{ background:var(--bg-alt); }
+.topbar-left{ display:flex; align-items:center; gap:12px; }
+
+.mobile-overlay{
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:999;
+}
+.mobile-overlay.open{ display:block; }
+
 @media (max-width:900px){
-  .sidebar{ display:none; }
+  .menu-toggle{ display:block; }
+
+  /* Sidebar becomes a slide-in panel instead of disappearing entirely */
+  .sidebar{
+    position:fixed; top:0; left:0; height:100vh; z-index:1000;
+    transform:translateX(-100%); transition:transform .25s ease;
+    width:260px;
+  }
+  .sidebar.open{ transform:translateX(0); }
+
   .row2, .row3, .stat-grid{ grid-template-columns:1fr; }
 }

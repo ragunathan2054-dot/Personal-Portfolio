@@ -23,8 +23,26 @@ function showPanel(key) {
   document.getElementById("panel-title").textContent = titles[key];
 }
 
+// ---- Mobile slide-in menu logic ----
+const sidebar = document.getElementById("sidebar");
+const mobileOverlay = document.getElementById("mobileOverlay");
+const menuToggle = document.getElementById("menuToggle");
+
+function closeMobileMenu() {
+  sidebar.classList.remove("open");
+  mobileOverlay.classList.remove("open");
+}
+menuToggle.addEventListener("click", () => {
+  sidebar.classList.toggle("open");
+  mobileOverlay.classList.toggle("open");
+});
+mobileOverlay.addEventListener("click", closeMobileMenu);
+
 document.querySelectorAll(".navlist button[data-panel]").forEach((btn) =>
-  btn.addEventListener("click", () => showPanel(btn.dataset.panel))
+  btn.addEventListener("click", () => {
+    showPanel(btn.dataset.panel);
+    closeMobileMenu(); // close the slide-in menu after picking a section, on mobile
+  })
 );
 
 function syncSidebarLogo() {

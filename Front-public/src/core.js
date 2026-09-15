@@ -30,10 +30,18 @@ export function initCore() {
   );
   sections.forEach((s) => obs.observe(s));
 
-  document.getElementById("themeToggle").addEventListener("click", () => {
-    const root = document.documentElement;
-    root.setAttribute("data-theme", root.getAttribute("data-theme") === "dark" ? "light" : "dark");
-  });
+ document.getElementById("themeToggle").addEventListener("click", () => {
+  const root = document.documentElement;
+  root.setAttribute("data-theme", root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+});
+
+const navLinksEl = document.getElementById("navLinks");
+document.getElementById("mobileMenuBtn").addEventListener("click", () => {
+  navLinksEl.classList.toggle("open");
+});
+navLinksEl.querySelectorAll("a").forEach((link) =>
+  link.addEventListener("click", () => navLinksEl.classList.remove("open")) 
+);
 }
 
 export function initReveal() {
