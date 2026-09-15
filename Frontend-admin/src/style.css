@@ -153,6 +153,7 @@ a{ color:inherit; text-decoration:none; }
 }
 .mobile-overlay.open{ display:block; }
 .menu-toggle{ display:block; }
+.menuToggle{ display:block; }
 
 @media (max-width:900px){
   .menu-toggle{ display:block; }
