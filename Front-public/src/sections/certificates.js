@@ -2,7 +2,7 @@ export function renderCertificates(certs) {
   const certGrid = document.getElementById("certGrid");
   certGrid.innerHTML = "";
 
-  certs.forEach((c, i) => {
+  [...certs].reverse().forEach((c, i) => {
     const card = document.createElement("div");
     card.className = "cert-card";
     const logoHtml = c.logoUrl
