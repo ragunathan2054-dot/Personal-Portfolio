@@ -2,7 +2,6 @@ export function renderCertificates(certs) {
   document.getElementById("certsCount").textContent = `(${certs.length})`;
   const certGrid = document.getElementById("certGrid");
   certGrid.innerHTML = "";
-
   const displayOrder = [...certs].reverse();
 
   displayOrder.forEach((c, i) => {
