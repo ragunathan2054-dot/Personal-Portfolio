@@ -1,8 +1,11 @@
 export function renderCertificates(certs) {
+  document.getElementById("certsCount").textContent = `(${certs.length})`;
   const certGrid = document.getElementById("certGrid");
   certGrid.innerHTML = "";
 
-  certs.forEach((c, i) => {
+  const displayOrder = [...certs].reverse();
+
+  displayOrder.forEach((c, i) => {
     const card = document.createElement("div");
     card.className = "cert-card";
     const logoHtml = c.logoUrl
@@ -38,11 +41,11 @@ export function renderCertificates(certs) {
     certGrid.appendChild(card);
   });
 
-  if (certs.length > 3) {
+  if (displayOrder.length > 3) {
     const moreBtn = document.createElement("div");
     moreBtn.className = "see-more-link";
     moreBtn.textContent = "See more →";
-    moreBtn.style.gridColumn = "1 / -1"; // spans full width under the grid
+    moreBtn.style.gridColumn = "1 / -1";
     moreBtn.addEventListener("click", () => {
       const hidden = [...certGrid.querySelectorAll(".cert-card")].slice(3);
       const opening = hidden[0].style.display === "none";
