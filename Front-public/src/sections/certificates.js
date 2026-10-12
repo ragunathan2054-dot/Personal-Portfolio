@@ -1,54 +1,63 @@
-export function renderCertificates(certs) {
-  const certGrid = document.getElementById("certGrid");
-  certGrid.innerHTML = "";
+export function renderProjects(projects) {
+  document.getElementById("projectsCount").textContent = `(${projects.length})`;
+  const projectList = document.getElementById("projectList");
+  projectList.innerHTML = "";
+  const displayOrder = [...projects].reverse();
 
-  [...certs].reverse().forEach((c, i) => {
+  displayOrder.forEach((p, i) => {
     const card = document.createElement("div");
-    card.className = "cert-card";
-    const logoHtml = c.logoUrl
-      ? `<img src="${c.logoUrl}" alt="${c.issuer} logo">`
-      : `<span class="logo-fallback">${c.issuer}</span>`;
-
+    card.className = "project-card";
     card.innerHTML = `
-      <div class="cert-inner">
-        <div class="cert-face cert-front">
-          <div class="badge">${logoHtml}</div>
-          <div><h3>${c.name}</h3><div class="issuer">${c.issuer}</div></div>
-          <span class="flip-hint">Click to view details →</span>
-        </div>
-        <div class="cert-face cert-back">
-          <div>
-            <div class="idline">Credential ID: ${c.credentialId}</div>
-            <div class="idline">Issued: ${c.issued}</div>
-            <div class="idline">Expires: ${c.expiry}</div>
+      <div class="p-top">
+        <div>
+          <div class="p-tag">${p.tag}</div>
+          <div class="p-title">${p.title}</div>
+          <div class="p-desc">${p.desc}</div>
+          <div class="p-meta">
+            <span>Status: ${p.status}</span>
+            <span>Version: ${p.version}</span>
+            <span>Commits: ${p.commits}</span>
           </div>
-          ${
-            c.credentialUrl
-              ? `<a class="flip-hint verify-link" href="${c.credentialUrl}" target="_blank" rel="noopener noreferrer">Verify Credential →</a>`
-              : `<span class="flip-hint">Verify Credential →</span>`
-          }
+        </div>
+        <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">${String(i + 1).padStart(2, "0")}</div>
+      </div>
+      <div class="p-body">
+        <div class="p-body-inner">
+          <div class="p-col">
+            <h4>Features</h4>
+            <ul>${(p.features || []).map((f) => `<li>${f}</li>`).join("")}</ul>
+            <div style="margin-top:14px;">${(p.stack || []).map((s) => `<span class="stack-pill">${s}</span>`).join("")}</div>
+          </div>
+          <div class="p-col">
+            <h4>Challenge</h4><p>${p.challenge}</p>
+            <h4 style="margin-top:14px;">Solution</h4><p>${p.solution}</p>
+          </div>
+        </div>
+        <div class="p-links">
+          <a href="${p.demo}">Live Demo →</a>
+          <a href="${p.repo}">GitHub →</a>
         </div>
       </div>
     `;
-    card.addEventListener("click", () => card.classList.toggle("flipped"));
-    const verifyLink = card.querySelector(".verify-link");
-    if (verifyLink) verifyLink.addEventListener("click", (e) => e.stopPropagation());
-
+    card.addEventListener("click", () => {
+      const wasOpen = card.classList.contains("open");
+      document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));
+      if (!wasOpen) card.classList.add("open");
+    });
     if (i >= 3) card.style.display = "none";
-    certGrid.appendChild(card);
+    projectList.appendChild(card);
   });
 
-  if (certs.length > 3) {
+  if (displayOrder.length > 3) {
     const moreBtn = document.createElement("div");
     moreBtn.className = "see-more-link";
     moreBtn.textContent = "See more →";
-    moreBtn.style.gridColumn = "1 / -1"; // spans full width under the grid
     moreBtn.addEventListener("click", () => {
-      const hidden = [...certGrid.querySelectorAll(".cert-card")].slice(3);
+      const hidden = [...projectList.querySelectorAll(".project-card")].slice(6);
       const opening = hidden[0].style.display === "none";
       hidden.forEach((c) => (c.style.display = opening ? "" : "none"));
       moreBtn.textContent = opening ? "See less" : "See more →";
     });
-    certGrid.appendChild(moreBtn);
+    projectList.appendChild(moreBtn);
   }
 }
