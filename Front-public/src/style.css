@@ -149,9 +149,79 @@ nav.scrolled{ border-bottom:1px solid var(--border); }
 .cert-back{ transform:rotateY(180deg); }
 .cert-face h3{ font-size:1.02rem; }
 .cert-face .issuer{ font-size:.78rem; color:var(--text-soft); margin-top:4px; }
-.badge{ width:200px; height:42px; border-radius:12px; background:var(--bg-alt); display:flex; align-items:flex-start; justify-content:flex-start; margin-bottom:14px; overflow:hidden; border:1px solid var(--border); }
-.badge img{ width:100%; height:100%; object-fit:contain; padding:6px; }
-.badge .logo-fallback{ font-family:var(--mono); font-size:.62rem; font-weight:600; letter-spacing:.03em; color:var(--brown-dark); text-align:center; padding:0 4px; }
+
+.badge {
+  width: 250px;
+  min-height: 42px;
+  border-radius: 12px;
+  background: var(--bg-alt);
+  display: flex;
+  align-items: center;       /* Vertically center */
+  justify-content: flex-start; /* Start from the left */
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.badge .logo-fallback {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--brown-dark);
+  text-align: left;
+  padding: 0 6px;
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
+.badge {
+  width: 250px;
+  min-height: 42px;
+  border-radius: 12px;
+  background: var(--bg-alt);
+  display: flex;
+  align-items: center;       
+  justify-content: flex-start; 
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-sizing: border-box;
+}
+
+.badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 6px;
+}
+
+.badge .logo-fallback {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--brown-dark);
+  text-align: left;
+  padding: 0 6px;
+  width: 100%;
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.4;
+  box-sizing: border-box;
+}
+
 .cert-face .idline{ font-family:var(--mono); font-size:.68rem; color:var(--text-soft); }
 
 /* ---- Contact ---- */
