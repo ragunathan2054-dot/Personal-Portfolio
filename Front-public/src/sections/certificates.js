@@ -7,7 +7,7 @@ export function renderCertificates(certs) {
     card.className = "cert-card";
     const logoHtml = c.logoUrl
       ? `<img src="${c.logoUrl}" alt="${c.issuer} logo">`
-      : `<span class="logo-fallback">${c.issuer.slice(0, 8)}</span>`;
+      : `<span class="logo-fallback">${c.issuer}</span>`;
 
     card.innerHTML = `
       <div class="cert-inner">
