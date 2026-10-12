@@ -1,8 +1,15 @@
+
+const VISIBLE_COUNT = 3;
+
 export function renderProjects(projects) {
+  const countEl = document.getElementById("projectsCount");
+  if (countEl) countEl.textContent = `(${projects.length})`;
+
   const projectList = document.getElementById("projectList");
   projectList.innerHTML = "";
+  const displayOrder = [...projects].reverse();
 
-  projects.forEach((p, i) => {
+  displayOrder.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "project-card";
     card.innerHTML = `
@@ -17,14 +24,14 @@ export function renderProjects(projects) {
             <span>Commits: ${p.commits}</span>
           </div>
         </div>
-        <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">0${i + 1}</div>
+        <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">${String(i + 1).padStart(2, "0")}</div>
       </div>
       <div class="p-body">
         <div class="p-body-inner">
           <div class="p-col">
             <h4>Features</h4>
-            <ul>${p.features.map((f) => `<li>${f}</li>`).join("")}</ul>
-            <div style="margin-top:14px;">${p.stack.map((s) => `<span class="stack-pill">${s}</span>`).join("")}</div>
+            <ul>${(p.features || []).map((f) => `<li>${f}</li>`).join("")}</ul>
+            <div style="margin-top:14px;">${(p.stack || []).map((s) => `<span class="stack-pill">${s}</span>`).join("")}</div>
           </div>
           <div class="p-col">
             <h4>Challenge</h4><p>${p.challenge}</p>
@@ -42,16 +49,16 @@ export function renderProjects(projects) {
       document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));
       if (!wasOpen) card.classList.add("open");
     });
-    if (i >= 3) card.style.display = "none";
+    if (i >= VISIBLE_COUNT) card.style.display = "none";
     projectList.appendChild(card);
   });
 
-  if (projects.length > 3) {
+  if (displayOrder.length > VISIBLE_COUNT) {
     const moreBtn = document.createElement("div");
     moreBtn.className = "see-more-link";
     moreBtn.textContent = "See more →";
     moreBtn.addEventListener("click", () => {
-      const hidden = [...projectList.querySelectorAll(".project-card")].slice(3);
+      const hidden = [...projectList.querySelectorAll(".project-card")].slice(VISIBLE_COUNT);
       const opening = hidden[0].style.display === "none";
       hidden.forEach((c) => (c.style.display = opening ? "" : "none"));
       moreBtn.textContent = opening ? "See less" : "See more →";

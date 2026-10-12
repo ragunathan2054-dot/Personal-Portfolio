@@ -44,11 +44,11 @@ export function renderProjects(projects) {
       document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));
       if (!wasOpen) card.classList.add("open");
     });
-    if (i >= 3) card.style.display = "none";
+    if (i >= 6) card.style.display = "none";
     projectList.appendChild(card);
   });
 
-  if (displayOrder.length > 3) {
+  if (displayOrder.length > 6) {
     const moreBtn = document.createElement("div");
     moreBtn.className = "see-more-link";
     moreBtn.textContent = "See more →";
