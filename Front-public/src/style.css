@@ -187,7 +187,7 @@ nav.scrolled{ border-bottom:1px solid var(--border); }
 }
 
 .badge {
-  width: 250px;
+  width: 200px;
   min-height: 42px;
   border-radius: 12px;
   background: var(--bg-alt);
