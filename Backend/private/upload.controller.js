@@ -6,25 +6,28 @@ export async function uploadImage(req, res, next) {
   try {
     const isPdf = req.file.mimetype === "application/pdf";
 
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
-        folder: "portfolio",
-        resource_type: isPdf ? "raw" : "image",
-        // "attachment" flag tells Cloudinary to serve this file with headers
-        // that force a real download, instead of trying to preview it inline —
-        // this is what actually fixes the "failed to load PDF" error, since
-        // the browser now downloads the file directly rather than attempting
-        // to render it in its built-in PDF viewer.
-        ...(isPdf ? { type: "upload", flags: "attachment" } : {}),
-      },
-      (error, result) => {
-        if (error) {
-          console.error("Cloudinary upload error:", error);
-          return next(error);
-        }
-        res.json({ url: result.secure_url });
+    const options = {
+      folder: "portfolio",
+      resource_type: isPdf ? "raw" : "image",
+    };
+
+    if (isPdf) {
+      const baseName =
+        req.file.originalname
+          .replace(/\.[^.]+$/, "")
+          .replace(/[^a-zA-Z0-9_-]/g, "_")
+          .slice(0, 60) || "document";
+
+      options.public_id = `${baseName}_${Date.now()}.pdf`;
+    }
+
+    const uploadStream = cloudinary.uploader.upload_stream(options, (error, result) => {
+      if (error) {
+        console.error("Cloudinary upload error:", error);
+        return next(error);
       }
-    );
+      res.json({ url: result.secure_url });
+    });
     uploadStream.end(req.file.buffer);
   } catch (err) {
     console.error("Cloudinary configuration error:", err);
