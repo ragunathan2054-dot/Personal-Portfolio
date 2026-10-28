@@ -5,20 +5,21 @@ const contentSchema = new mongoose.Schema({
     logoText: { type: String, default: "AK" },
     logoImageUrl: { type: String, default: "" },
     heroBadgeText: { type: String, default: "AK" },
-    heroPhotoUrl: { type: String, default: "" }, // new — your real photo, shown instead of the initials badge
+    heroPhotoUrl: { type: String, default: "" },
   },
-hero: {
-  eyebrow: String,
-  headline: String,
-  description: String,
-  roles: [String],
-  resumeButtonLabel: { type: String, default: "Download Resume" },
-  resumeUrl: String,
-  buttons: [{ label: String, link: String }],
-},
+  hero: {
+    eyebrow: String,
+    headline: String,
+    description: String,
+    roles: [String],
+    resumeButtonLabel: { type: String, default: "Download Resume" },
+    resumeUrl: String,
+    buttons: [{ label: String, link: String }],
+  },
   about: {
     paragraphs: [String],
     stats: [{ number: String, label: String }],
+    education: [{ kind: String, period: String, institution: String, course: String, details: String }],
     timeline: [{ years: String, title: String, description: String }],
   },
   skills: [
@@ -49,8 +50,8 @@ hero: {
     },
   ],
   certificates: [
-  { name: String, issuer: String, credentialId: String, issued: String, expiry: String, logoUrl: String, credentialUrl: String },
-],
+    { name: String, issuer: String, credentialId: String, issued: String, expiry: String, logoUrl: String, credentialUrl: String },
+  ],
   contact: {
     email: String,
     location: String,

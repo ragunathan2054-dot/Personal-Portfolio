@@ -150,6 +150,16 @@ nav.scrolled{ border-bottom:1px solid var(--border); }
 .cert-face h3{ font-size:1.02rem; }
 .cert-face .issuer{ font-size:.78rem; color:var(--text-soft); margin-top:4px; }
 
+/* ---- Education block (About section, under the stats row) ---- */
+.edu-block{ margin-top:48px; }
+.edu-block .eyebrow{ margin-bottom:18px; }
+.edu-item{ border-top:1px solid var(--border); padding:18px 0; }
+.edu-item:last-child{ padding-bottom:0; }
+.edu-period{ font-family:var(--mono); font-size:.72rem; color:var(--brown); letter-spacing:.06em; }
+.edu-item h3{ font-size:1.08rem; font-weight:600; margin:6px 0 4px; }
+.edu-course{ font-size:.92rem; color:var(--text); }
+.edu-detail{ font-size:.86rem; color:var(--text-soft); margin-top:4px; }
+
 .badge {
   width: 250px;
   min-height: 42px;
