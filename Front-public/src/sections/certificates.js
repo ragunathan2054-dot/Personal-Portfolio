@@ -1,63 +1,69 @@
-export function renderProjects(projects) {
-  document.getElementById("projectsCount").textContent = `(${projects.length})`;
-  const projectList = document.getElementById("projectList");
-  projectList.innerHTML = "";
-  const displayOrder = [...projects].reverse();
+import { escapeHtml } from "../api.js";
 
-  displayOrder.forEach((p, i) => {
+const VISIBLE_COUNT = 3;
+function safeUrl(url) {
+  return /^https?:\/\//i.test(url || "") ? url : "";
+}
+
+export function renderCertificates(certs = []) {
+  const countEl = document.getElementById("certsCount");
+  if (countEl) countEl.textContent = `(${certs.length})`;
+
+  const certGrid = document.getElementById("certGrid");
+  certGrid.innerHTML = "";
+  const displayOrder = [...certs].reverse();
+
+  displayOrder.forEach((c, i) => {
     const card = document.createElement("div");
-    card.className = "project-card";
+    card.className = "cert-card";
+
+    const logoHtml = c.logoUrl
+      ? `<img src="${escapeHtml(c.logoUrl)}" alt="${escapeHtml(c.issuer)} logo">`
+      : `<span class="logo-fallback">${escapeHtml((c.issuer || "").slice(0, 8))}</span>`;
+
+    const link = safeUrl(c.credentialUrl);
+
     card.innerHTML = `
-      <div class="p-top">
-        <div>
-          <div class="p-tag">${p.tag}</div>
-          <div class="p-title">${p.title}</div>
-          <div class="p-desc">${p.desc}</div>
-          <div class="p-meta">
-            <span>Status: ${p.status}</span>
-            <span>Version: ${p.version}</span>
-            <span>Commits: ${p.commits}</span>
-          </div>
+      <div class="cert-inner">
+        <div class="cert-face cert-front">
+          <div class="badge">${logoHtml}</div>
+          <div><h3>${escapeHtml(c.name)}</h3><div class="issuer">${escapeHtml(c.issuer)}</div></div>
+          <span class="flip-hint">Click to view details →</span>
         </div>
-        <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">${String(i + 1).padStart(2, "0")}</div>
-      </div>
-      <div class="p-body">
-        <div class="p-body-inner">
-          <div class="p-col">
-            <h4>Features</h4>
-            <ul>${(p.features || []).map((f) => `<li>${f}</li>`).join("")}</ul>
-            <div style="margin-top:14px;">${(p.stack || []).map((s) => `<span class="stack-pill">${s}</span>`).join("")}</div>
+        <div class="cert-face cert-back">
+          <div>
+            <div class="idline">Credential ID: ${escapeHtml(c.credentialId)}</div>
+            <div class="idline">Issued: ${escapeHtml(c.issued)}</div>
+            <div class="idline">Expires: ${escapeHtml(c.expiry)}</div>
           </div>
-          <div class="p-col">
-            <h4>Challenge</h4><p>${p.challenge}</p>
-            <h4 style="margin-top:14px;">Solution</h4><p>${p.solution}</p>
-          </div>
-        </div>
-        <div class="p-links">
-          <a href="${p.demo}">Live Demo →</a>
-          <a href="${p.repo}">GitHub →</a>
+          ${
+            link
+              ? `<a class="flip-hint verify-link" href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer">Verify Credential →</a>`
+              : `<span class="flip-hint">Verify Credential →</span>`
+          }
         </div>
       </div>
     `;
-    card.addEventListener("click", () => {
-      const wasOpen = card.classList.contains("open");
-      document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));
-      if (!wasOpen) card.classList.add("open");
-    });
-    if (i >= 6) card.style.display = "none";
-    projectList.appendChild(card);
+
+    card.addEventListener("click", () => card.classList.toggle("flipped"));
+    const verifyLink = card.querySelector(".verify-link");
+    if (verifyLink) verifyLink.addEventListener("click", (e) => e.stopPropagation());
+
+    if (i >= VISIBLE_COUNT) card.style.display = "none";
+    certGrid.appendChild(card);
   });
 
-  if (displayOrder.length > 6) {
+  if (displayOrder.length > VISIBLE_COUNT) {
     const moreBtn = document.createElement("div");
     moreBtn.className = "see-more-link";
     moreBtn.textContent = "See more →";
+    moreBtn.style.gridColumn = "1 / -1"; // spans the full width under the grid
     moreBtn.addEventListener("click", () => {
-      const hidden = [...projectList.querySelectorAll(".project-card")].slice(6);
+      const hidden = [...certGrid.querySelectorAll(".cert-card")].slice(VISIBLE_COUNT);
       const opening = hidden[0].style.display === "none";
       hidden.forEach((c) => (c.style.display = opening ? "" : "none"));
       moreBtn.textContent = opening ? "See less" : "See more →";
     });
-    projectList.appendChild(moreBtn);
+    certGrid.appendChild(moreBtn);
   }
 }
