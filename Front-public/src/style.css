@@ -254,6 +254,16 @@ footer p{ font-size:.8rem; color:var(--text-soft); }
 .chapter{ padding:54px 0; display:flex; align-items:center; justify-content:center; }
 .chapter .cline{ font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--text-soft); }
 
+/* ---- Certificate text badge: grows to fit the full issuer name ---- */
+.badge.badge-text{
+  width:auto; height:auto; min-width:52px; min-height:52px;
+  max-width:100%; align-self:flex-start;
+  padding:10px 14px;
+}
+.badge.badge-text .logo-fallback{
+  white-space:normal; text-align:left; line-height:1.35;
+  padding:0; font-size:.7rem; overflow-wrap:anywhere;
+}
 /* ---- Toast notifications ---- */
 .toast{
   position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);

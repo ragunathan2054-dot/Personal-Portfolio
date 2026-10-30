@@ -1,6 +1,5 @@
 import { escapeHtml } from "../api.js";
-
-const VISIBLE_COUNT = 3;
+const VISIBLE_COUNT = 6;
 function safeUrl(url) {
   return /^https?:\/\//i.test(url || "") ? url : "";
 }
@@ -16,17 +15,16 @@ export function renderCertificates(certs = []) {
   displayOrder.forEach((c, i) => {
     const card = document.createElement("div");
     card.className = "cert-card";
-
-    const logoHtml = c.logoUrl
-      ? `<img src="${escapeHtml(c.logoUrl)}" alt="${escapeHtml(c.issuer)} logo">`
-      : `<span class="logo-fallback">${escapeHtml((c.issuer || "").slice(0, 8))}</span>`;
+    const badgeHtml = c.logoUrl
+      ? `<div class="badge"><img src="${escapeHtml(c.logoUrl)}" alt="${escapeHtml(c.issuer)} logo"></div>`
+      : `<div class="badge badge-text"><span class="logo-fallback">${escapeHtml(c.issuer)}</span></div>`;
 
     const link = safeUrl(c.credentialUrl);
 
     card.innerHTML = `
       <div class="cert-inner">
         <div class="cert-face cert-front">
-          <div class="badge">${logoHtml}</div>
+          ${badgeHtml}
           <div><h3>${escapeHtml(c.name)}</h3><div class="issuer">${escapeHtml(c.issuer)}</div></div>
           <span class="flip-hint">Click to view details →</span>
         </div>
