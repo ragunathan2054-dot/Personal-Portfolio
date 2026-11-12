@@ -16,12 +16,31 @@ import publicRoutes from "./public/public.routes.js";
 import privateRoutes from "./private/private.routes.js";
 
 const app = express();
+app.set("trust proxy", 1);
+function parseOrigins(...values) {
+  return values
+    .filter(Boolean)
+    .flatMap((v) => v.split(","))
+    .map((o) => o.trim().replace(/\/+$/, ""))
+    .filter(Boolean);
+}
+
+const allowedOrigins = parseOrigins(process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN);
+console.log("Allowed origins:", allowedOrigins);
 
 app.use(helmetMiddleware);
-app.use(cors({
-  origin: [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN],
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin(origin, callback) {
+      // No Origin header means it isn't a browser page (the health pinger, curl). Allow it.
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      console.warn(`CORS blocked origin: ${origin}`);
+      return callback(null, false); // no CORS headers, so the browser blocks the page
+    },
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 app.use(sanitizeMiddleware);
