@@ -1,3 +1,4 @@
+import { escapeHtml, safeUrl } from "../api.js";
 
 const VISIBLE_COUNT = 3;
 
@@ -15,13 +16,13 @@ export function renderProjects(projects) {
     card.innerHTML = `
       <div class="p-top">
         <div>
-          <div class="p-tag">${p.tag}</div>
-          <div class="p-title">${p.title}</div>
-          <div class="p-desc">${p.desc}</div>
+          <div class="p-tag">${escapeHtml(p.tag)}</div>
+          <div class="p-title">${escapeHtml(p.title)}</div>
+          <div class="p-desc">${escapeHtml(p.desc)}</div>
           <div class="p-meta">
-            <span>Status: ${p.status}</span>
-            <span>Version: ${p.version}</span>
-            <span>Commits: ${p.commits}</span>
+            <span>Status: ${escapeHtml(p.status)}</span>
+            <span>Version: ${escapeHtml(p.version)}</span>
+            <span>Commits: ${escapeHtml(p.commits)}</span>
           </div>
         </div>
         <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">${String(i + 1).padStart(2, "0")}</div>
@@ -30,17 +31,17 @@ export function renderProjects(projects) {
         <div class="p-body-inner">
           <div class="p-col">
             <h4>Features</h4>
-            <ul>${(p.features || []).map((f) => `<li>${f}</li>`).join("")}</ul>
-            <div style="margin-top:14px;">${(p.stack || []).map((s) => `<span class="stack-pill">${s}</span>`).join("")}</div>
+            <ul>${(p.features || []).map((f) => `<li>${escapeHtml(f)}</li>`).join("")}</ul>
+            <div style="margin-top:14px;">${(p.stack || []).map((s) => `<span class="stack-pill">${escapeHtml(s)}</span>`).join("")}</div>
           </div>
           <div class="p-col">
-            <h4>Challenge</h4><p>${p.challenge}</p>
-            <h4 style="margin-top:14px;">Solution</h4><p>${p.solution}</p>
+            <h4>Challenge</h4><p>${escapeHtml(p.challenge)}</p>
+            <h4 style="margin-top:14px;">Solution</h4><p>${escapeHtml(p.solution)}</p>
           </div>
         </div>
         <div class="p-links">
-          <a href="${p.demo}">Live Demo →</a>
-          <a href="${p.repo}">GitHub →</a>
+          <a href="${escapeHtml(safeUrl(p.demo))}">Live Demo →</a>
+          <a href="${escapeHtml(safeUrl(p.repo))}">GitHub →</a>
         </div>
       </div>
     `;

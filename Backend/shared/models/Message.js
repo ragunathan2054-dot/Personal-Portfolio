@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { defineModel } from "../../config/db.js";
 
 
 const messageSchema = new mongoose.Schema(
@@ -11,4 +12,4 @@ const messageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Message", messageSchema);
+export default defineModel("Message", messageSchema);

@@ -6,7 +6,10 @@ export async function requireAuth(req, res, next) {
     const token = req.cookies.token;
     if (!token) return res.status(401).json({ error: "Not authenticated." });
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+    // Tokens issued for a specific purpose (e.g. the 2FA "password passed"
+    // token) are not login sessions.
+    if (decoded.purpose) return res.status(401).json({ error: "Session invalid or expired." });
     const user = await User.findById(decoded.id).select("-passwordHash -twoFactorSecret");
     if (!user) return res.status(401).json({ error: "Not authenticated." });
 

@@ -28,3 +28,9 @@ Thumbs.db
 # Editor folders
 .vscode/
 .idea/ 
+# Cloudflare Workers (local state and local/production secret files)
+.wrangler/
+Backend/.wrangler/
+.dev.vars*
+Backend/.dev.vars*
+Backend/.prod.vars.json

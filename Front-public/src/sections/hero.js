@@ -1,22 +1,22 @@
-import { escapeHtml } from "../api.js";
+import { escapeHtml, safeUrl, limitedHtml } from "../api.js";
 
 let roles = [];
 let roleIndex = 0;
 
 export function renderHero(hero) {
   document.getElementById("heroEyebrow").textContent = hero.eyebrow;
-  document.getElementById("heroHeadline").innerHTML = hero.headline;
+  document.getElementById("heroHeadline").innerHTML = limitedHtml(hero.headline);
   document.getElementById("heroDesc").textContent = hero.description;
 
   const buttonsEl = document.getElementById("heroButtons");
   let html = "";
 
   if (hero.resumeUrl) {
-  html += `<a class="btn btn-primary" href="${escapeHtml(hero.resumeUrl)}" download="resume.pdf">${escapeHtml(hero.resumeButtonLabel || "Download Resume")}</a>`;
+  html += `<a class="btn btn-primary" href="${escapeHtml(safeUrl(hero.resumeUrl))}" download="resume.pdf">${escapeHtml(hero.resumeButtonLabel || "Download Resume")}</a>`;
 }
 
   html += (hero.buttons || [])
-    .map((b) => `<a class="btn btn-ghost" href="${escapeHtml(b.link || "#")}">${escapeHtml(b.label)}</a>`)
+    .map((b) => `<a class="btn btn-ghost" href="${escapeHtml(safeUrl(b.link))}">${escapeHtml(b.label)}</a>`)
     .join("");
 
   buttonsEl.innerHTML = html;

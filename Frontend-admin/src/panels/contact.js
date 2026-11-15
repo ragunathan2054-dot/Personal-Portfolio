@@ -1,3 +1,4 @@
+import { escapeHtml } from "../api.js";
 export function renderContactPanel(content) {
   const contact = content.contact || {};
   const el = document.getElementById("panel-contact");
@@ -7,14 +8,14 @@ export function renderContactPanel(content) {
     <div class="card">
       <div class="card-head"><h3>Contact details</h3></div>
       <div class="row2">
-        <div class="field"><label>Email address</label><input type="email" id="c-email" value="${contact.email || ""}"></div>
-        <div class="field"><label>Location</label><input type="text" id="c-location" value="${contact.location || ""}"></div>
+        <div class="field"><label>Email address</label><input type="email" id="c-email" value="${escapeHtml(contact.email)}"></div>
+        <div class="field"><label>Location</label><input type="text" id="c-location" value="${escapeHtml(contact.location)}"></div>
       </div>
       <div class="row2">
-        <div class="field"><label>LinkedIn</label><input type="text" id="c-linkedin" value="${contact.linkedin || ""}"></div>
-        <div class="field"><label>GitHub</label><input type="text" id="c-github" value="${contact.github || ""}"></div>
+        <div class="field"><label>LinkedIn</label><input type="text" id="c-linkedin" value="${escapeHtml(contact.linkedin)}"></div>
+        <div class="field"><label>GitHub</label><input type="text" id="c-github" value="${escapeHtml(contact.github)}"></div>
       </div>
-      <div class="field"><label>Availability note</label><input type="text" id="c-availability" value="${contact.availability || ""}"></div>
+      <div class="field"><label>Availability note</label><input type="text" id="c-availability" value="${escapeHtml(contact.availability)}"></div>
     </div>
     <div class="card">
       <div class="switch-row">

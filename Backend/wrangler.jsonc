@@ -1,0 +1,41 @@
+// Cloudflare Workers configuration for the portfolio API.
+// Deployment steps: see CLOUDFLARE_DEPLOY.md in this folder.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio-api",
+  "main": "worker.js",
+  // Node.js HTTP server support (needed to run Express) requires 2025-08-15 or later.
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Gives a *.workers.dev URL for smoke-testing before switching the custom domain.
+  "workers_dev": true,
+
+  // Custom domain for production. Cookies are scoped to .ragunathan-back.online,
+  // so the API must be served from a subdomain of it (not *.workers.dev).
+  // Uncomment and set the hostname once you've chosen it (see CLOUDFLARE_DEPLOY.md):
+  // "routes": [
+  //   { "pattern": "api.ragunathan-back.online", "custom_domain": true }
+  // ],
+
+  // The Workers bundler prefers a package's "browser" build when one exists.
+  // These packages' browser builds don't work server-side, so point them at
+  // their Node entry points instead:
+  //   mongoose  - browser build has no database driver
+  //   qrcode    - browser build needs a <canvas> element (2FA setup QR code)
+  //   base32.js - browser build returns arrays instead of Buffers (2FA codes)
+  "alias": {
+    "mongoose": "./node_modules/mongoose/index.js",
+    "qrcode": "./node_modules/qrcode/lib/server.js",
+    "base32.js": "./node_modules/base32.js/index.js"
+  },
+
+  // Non-secret settings. Everything else (MONGO_URI, JWT_SECRET, origins,
+  // Cloudinary keys, ...) is set with `wrangler secret`, never in this file.
+  "vars": {
+    "NODE_ENV": "production"
+  },
+
+  // Free Workers Logs, so errors are visible in the Cloudflare dashboard.
+  "observability": { "enabled": true }
+}

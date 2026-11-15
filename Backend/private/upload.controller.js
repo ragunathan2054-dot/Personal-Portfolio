@@ -1,4 +1,4 @@
-import cloudinary from "../config/cloudinary.js";
+import { uploadBuffer } from "../config/cloudinary.js";
 
 export async function uploadImage(req, res, next) {
   if (!req.file) return res.status(400).json({ error: "No file provided." });
@@ -9,6 +9,8 @@ export async function uploadImage(req, res, next) {
     const options = {
       folder: "portfolio",
       resource_type: isPdf ? "raw" : "image",
+      mimetype: req.file.mimetype,
+      filename: req.file.originalname,
     };
 
     if (isPdf) {
@@ -21,16 +23,10 @@ export async function uploadImage(req, res, next) {
       options.public_id = `${baseName}_${Date.now()}.pdf`;
     }
 
-    const uploadStream = cloudinary.uploader.upload_stream(options, (error, result) => {
-      if (error) {
-        console.error("Cloudinary upload error:", error);
-        return next(error);
-      }
-      res.json({ url: result.secure_url });
-    });
-    uploadStream.end(req.file.buffer);
+    const result = await uploadBuffer(req.file.buffer, options);
+    res.json({ url: result.secure_url });
   } catch (err) {
-    console.error("Cloudinary configuration error:", err);
+    console.error("Cloudinary upload error:", err.message);
     next(err);
   }
 }

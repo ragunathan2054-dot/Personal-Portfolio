@@ -1,3 +1,4 @@
+import { escapeHtml } from "../api.js";
 const CAT_LABELS = { cloud: "Cloud & DevOps", dev: "Development", design: "Design", sec: "Security" };
 const GROUP_ORDER = ["cloud", "dev", "design", "sec"];
 let activeFilter = "all";
@@ -20,21 +21,21 @@ export function renderSkills(skills) {
       const card = document.createElement("div");
       card.className = "skill-card";
       card.dataset.cat = s.category;
-      card.dataset.name = s.name.toLowerCase();
+      card.dataset.name = (s.name || "").toLowerCase();
       card.dataset.idx = idx;
       card.innerHTML = `
         <div class="skill-inner">
           <div class="skill-face skill-front">
             <div class="skill-top-row">
-              <div class="skill-icon">${s.name.replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase()}</div>
-              <div class="skill-name-block"><div class="sname">${s.name}</div><span class="scat">${CAT_LABELS[s.category]}</span></div>
-              <span class="skill-pct">${s.years}</span>
+              <div class="skill-icon">${escapeHtml((s.name || "").replace(/[^A-Za-z]/g, "").slice(0, 2).toUpperCase())}</div>
+              <div class="skill-name-block"><div class="sname">${escapeHtml(s.name)}</div><span class="scat">${CAT_LABELS[s.category]}</span></div>
+              <span class="skill-pct">${escapeHtml(s.years)}</span>
             </div>
-            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${s.level}%;"></div></div>
-            <div><div class="skill-desc">${s.description}</div><div class="skill-used" style="margin-top:8px;">Used in <b>${s.usedIn}</b></div></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${Number(s.level) || 0}%;"></div></div>
+            <div><div class="skill-desc">${escapeHtml(s.description)}</div><div class="skill-used" style="margin-top:8px;">Used in <b>${escapeHtml(s.usedIn)}</b></div></div>
           </div>
           <div class="skill-face skill-back">
-            <div><span class="scat">${CAT_LABELS[s.category]}</span><p class="skill-note" style="margin-top:8px;">${s.note}</p></div>
+            <div><span class="scat">${CAT_LABELS[s.category]}</span><p class="skill-note" style="margin-top:8px;">${escapeHtml(s.note)}</p></div>
             <span class="flip-hint">← Tap to flip back</span>
           </div>
         </div>`;

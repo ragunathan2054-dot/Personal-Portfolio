@@ -1,3 +1,4 @@
+import { escapeHtml } from "../api.js";
 export function renderProjectsPanel(content) {
   let projects = [...(content.projects || [])];
   const el = document.getElementById("panel-projects");
@@ -12,27 +13,27 @@ export function renderProjectsPanel(content) {
     document.getElementById("projList").innerHTML = projects
       .map((p, i) => `
         <div class="accordion-item" data-i="${i}">
-          <div class="accordion-head"><div class="accordion-title"><span class="idx">${String(i + 1).padStart(2, "0")}</span><b>${p.title || "Untitled"}</b><span class="meta">${p.status || ""}</span></div><span class="accordion-caret">▸</span></div>
+          <div class="accordion-head"><div class="accordion-title"><span class="idx">${String(i + 1).padStart(2, "0")}</span><b>${escapeHtml(p.title) || "Untitled"}</b><span class="meta">${escapeHtml(p.status)}</span></div><span class="accordion-caret">▸</span></div>
           <div class="accordion-body">
             <div class="row2">
-              <div class="field"><label>Title</label><input data-k="title" value="${p.title || ""}"></div>
-              <div class="field"><label>Tag</label><input data-k="tag" value="${p.tag || ""}"></div>
+              <div class="field"><label>Title</label><input data-k="title" value="${escapeHtml(p.title)}"></div>
+              <div class="field"><label>Tag</label><input data-k="tag" value="${escapeHtml(p.tag)}"></div>
             </div>
-            <div class="field"><label>Short description</label><textarea data-k="desc">${p.desc || ""}</textarea></div>
+            <div class="field"><label>Short description</label><textarea data-k="desc">${escapeHtml(p.desc)}</textarea></div>
             <div class="row3">
-              <div class="field"><label>Status</label><input data-k="status" value="${p.status || ""}"></div>
-              <div class="field"><label>Version</label><input data-k="version" value="${p.version || ""}"></div>
-              <div class="field"><label>Commits</label><input data-k="commits" value="${p.commits || ""}"></div>
+              <div class="field"><label>Status</label><input data-k="status" value="${escapeHtml(p.status)}"></div>
+              <div class="field"><label>Version</label><input data-k="version" value="${escapeHtml(p.version)}"></div>
+              <div class="field"><label>Commits</label><input data-k="commits" value="${escapeHtml(p.commits)}"></div>
             </div>
-            <div class="field"><label>Tech stack (comma separated)</label><input data-k="stack" value="${toArray(p.stack).join(", ")}"></div>
-            <div class="field"><label>Features (one per line)</label><textarea data-k="features">${toArray(p.features).join("\n")}</textarea></div>
+            <div class="field"><label>Tech stack (comma separated)</label><input data-k="stack" value="${escapeHtml(toArray(p.stack).join(", "))}"></div>
+            <div class="field"><label>Features (one per line)</label><textarea data-k="features">${escapeHtml(toArray(p.features).join("\n"))}</textarea></div>
             <div class="row2">
-              <div class="field"><label>Challenge</label><textarea data-k="challenge">${p.challenge || ""}</textarea></div>
-              <div class="field"><label>Solution</label><textarea data-k="solution">${p.solution || ""}</textarea></div>
+              <div class="field"><label>Challenge</label><textarea data-k="challenge">${escapeHtml(p.challenge)}</textarea></div>
+              <div class="field"><label>Solution</label><textarea data-k="solution">${escapeHtml(p.solution)}</textarea></div>
             </div>
             <div class="row2">
-              <div class="field"><label>Live demo link</label><input data-k="demo" value="${p.demo || ""}"></div>
-              <div class="field"><label>GitHub repo link</label><input data-k="repo" value="${p.repo || ""}"></div>
+              <div class="field"><label>Live demo link</label><input data-k="demo" value="${escapeHtml(p.demo)}"></div>
+              <div class="field"><label>GitHub repo link</label><input data-k="repo" value="${escapeHtml(p.repo)}"></div>
             </div>
             <div class="accordion-actions"><button class="btn btn-danger-ghost btn-sm remove-proj">Delete project</button><button class="btn btn-primary btn-sm save-proj">Save</button></div>
           </div>

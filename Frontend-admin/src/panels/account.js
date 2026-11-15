@@ -1,4 +1,4 @@
-import { apiFetch } from "../api.js";
+import { apiFetch, escapeHtml } from "../api.js";
 import { showToast } from "../toast.js";
 
 export function renderAccountPanel(user) {
@@ -10,7 +10,7 @@ export function renderAccountPanel(user) {
     <div class="card">
       <div class="card-head"><h3>Profile</h3></div>
       <div class="avatar-row">
-        <div class="avatar">${(user.email || "?")[0].toUpperCase()}</div>
+        <div class="avatar">${escapeHtml((user.email || "?")[0].toUpperCase())}</div>
       </div>
     </div>
 
@@ -19,7 +19,7 @@ export function renderAccountPanel(user) {
 
       <div class="field">
         <label>New email</label>
-        <input type="email" id="email-new" value="${user.email}">
+        <input type="email" id="email-new" value="${escapeHtml(user.email)}">
       </div>
 
       <div class="field">

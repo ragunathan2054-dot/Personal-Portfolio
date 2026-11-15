@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { defineModel } from "../../config/db.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -16,4 +17,4 @@ userSchema.methods.isLocked = function () {
   return this.lockUntil && this.lockUntil > Date.now();
 };
 
-export default mongoose.model("User", userSchema);
+export default defineModel("User", userSchema);

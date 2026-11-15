@@ -1,17 +1,12 @@
 import crypto from "crypto";
+import { baseCookieOptions } from "../../shared/utils/cookies.js";
 
 export function issueCsrfToken(req, res, next) {
   const token = crypto.randomBytes(32).toString("hex");
 
   res.cookie("XSRF-TOKEN", token, {
-    httpOnly: false,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    domain:
-      process.env.NODE_ENV === "production"
-        ? "ragunathan-back.online"
-        : undefined,
-    path: "/",
+    ...baseCookieOptions(),
+    httpOnly: false, // the admin site reads it and echoes it back in X-CSRF-Token
   });
 
   next();

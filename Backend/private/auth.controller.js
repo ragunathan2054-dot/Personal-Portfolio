@@ -1,27 +1,27 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
 import User from "../shared/models/User.js";
+import { hashPassword, verifyPassword } from "../shared/utils/password.js";
+import { baseCookieOptions } from "../shared/utils/cookies.js";
+
+const PENDING_2FA_COOKIE = "twofa_pending";
 
 function signToken(userId) {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
+    algorithm: "HS256",
   });
 }
 
 function setAuthCookie(res, token) {
   res.cookie("token", token, {
+    ...baseCookieOptions(),
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    domain: process.env.NODE_ENV === "production"
-      ? ".ragunathan-back.online"
-      : undefined,
-    path: "/",
     maxAge: 2 * 60 * 60 * 1000,
   });
 }
+
 export async function login(req, res) {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email.toLowerCase() });
@@ -33,7 +33,7 @@ export async function login(req, res) {
     return res.status(423).json({ error: "Account temporarily locked. Try again later." });
   }
 
-  const valid = await bcrypt.compare(password, user.passwordHash);
+  const valid = await verifyPassword(password, user.passwordHash);
   if (!valid) {
     user.loginAttempts += 1;
     if (user.loginAttempts >= 5) user.lockUntil = new Date(Date.now() + 15 * 60 * 1000);
@@ -46,6 +46,17 @@ export async function login(req, res) {
   await user.save();
 
   if (user.twoFactorEnabled) {
+    // Proof that the password step passed, valid for 5 minutes. The 2FA step
+    // only accepts this cookie, never a bare userId from the request body.
+    const pending = jwt.sign({ id: user._id, purpose: "2fa" }, process.env.JWT_SECRET, {
+      expiresIn: "5m",
+      algorithm: "HS256",
+    });
+    res.cookie(PENDING_2FA_COOKIE, pending, {
+      ...baseCookieOptions(),
+      httpOnly: true,
+      maxAge: 5 * 60 * 1000,
+    });
     return res.json({ requiresTwoFactor: true, userId: user._id });
   }
 
@@ -56,8 +67,24 @@ export async function login(req, res) {
 
 export async function verifyTwoFactorLogin(req, res) {
   const { userId, otp } = req.body;
-  const user = await User.findById(userId); // full document, includes twoFactorSecret — correct
+  const expired = { error: "Sign-in session expired. Enter your password again." };
+
+  let pending;
+  try {
+    pending = jwt.verify(req.cookies[PENDING_2FA_COOKIE], process.env.JWT_SECRET, { algorithms: ["HS256"] });
+  } catch {
+    return res.status(401).json(expired);
+  }
+  if (pending.purpose !== "2fa" || (userId && String(userId) !== String(pending.id))) {
+    return res.status(401).json(expired);
+  }
+
+  const user = await User.findById(pending.id); // full document, includes twoFactorSecret — correct
   if (!user || !user.twoFactorSecret) return res.status(401).json({ error: "Invalid session." });
+
+  if (user.isLocked()) {
+    return res.status(423).json({ error: "Account temporarily locked. Try again later." });
+  }
 
   const verified = speakeasy.totp.verify({
     secret: user.twoFactorSecret,
@@ -65,15 +92,29 @@ export async function verifyTwoFactorLogin(req, res) {
     token: otp,
     window: 1,
   });
-  if (!verified) return res.status(401).json({ error: "Invalid authentication code." });
+  if (!verified) {
+    // Wrong codes count toward the same lockout as wrong passwords, so the
+    // 6-digit code can't be brute-forced.
+    user.loginAttempts += 1;
+    if (user.loginAttempts >= 5) user.lockUntil = new Date(Date.now() + 15 * 60 * 1000);
+    await user.save();
+    return res.status(401).json({ error: "Invalid authentication code." });
+  }
 
+  user.loginAttempts = 0;
+  user.lockUntil = null;
+  await user.save();
+
+  res.clearCookie(PENDING_2FA_COOKIE, { ...baseCookieOptions(), httpOnly: true });
   const token = signToken(user._id);
   setAuthCookie(res, token);
   res.json({ success: true });
 }
 
 export function logout(req, res) {
-  res.clearCookie("token");
+  // Must use the same domain/path the cookie was set with, or the browser
+  // keeps it (previously the production cookie survived logout).
+  res.clearCookie("token", { ...baseCookieOptions(), httpOnly: true });
   res.json({ success: true });
 }
 
@@ -122,10 +163,10 @@ export async function changePassword(req, res) {
   const { currentPassword, newPassword } = req.body;
   const user = await User.findById(req.user._id);
 
-  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+  const valid = await verifyPassword(currentPassword, user.passwordHash);
   if (!valid) return res.status(401).json({ error: "Current password is incorrect." });
 
-  user.passwordHash = await bcrypt.hash(newPassword, 12);
+  user.passwordHash = await hashPassword(newPassword);
   await user.save();
   res.json({ success: true });
 }
@@ -136,7 +177,7 @@ export async function changeEmail(req, res) {
   const { newEmail, currentPassword } = req.body;
   const user = await User.findById(req.user._id);
 
-  const valid = await bcrypt.compare(currentPassword, user.passwordHash);
+  const valid = await verifyPassword(currentPassword, user.passwordHash);
   if (!valid) return res.status(401).json({ error: "Current password is incorrect." });
 
   const existing = await User.findOne({ email: newEmail.toLowerCase() });

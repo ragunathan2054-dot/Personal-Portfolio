@@ -1,5 +1,6 @@
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+import { LazyMemoryStore } from "./rateLimitStore.js";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 
@@ -18,12 +19,24 @@ export const helmetMiddleware = helmet({
   },
 });
 
+// Rate limits are keyed by client IP. On Cloudflare the real client IP is in
+// CF-Connecting-IP; on Render/Node req.ip is used, as before.
+// Note: the counters are kept in memory, so on Workers each instance counts
+// separately — treat these limits as best-effort. The database-backed account
+// lockout (5 failed logins -> 15 min lock) is the main brute-force defence.
+export function clientIpKey(req) {
+  return req.headers["cf-connecting-ip"] || req.ip || "unknown";
+}
+
 // Applies to every request on the server.
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 300,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: clientIpKey,
+  store: new LazyMemoryStore(),
+  validate: false,
   message: { error: "Too many requests. Please try again later." },
 });
 
@@ -33,6 +46,9 @@ export const authLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  keyGenerator: clientIpKey,
+  store: new LazyMemoryStore(),
+  validate: false,
   message: { error: "Too many login attempts. Try again in 15 minutes." },
 });
 

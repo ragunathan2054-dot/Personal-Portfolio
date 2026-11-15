@@ -1,15 +1,16 @@
 import { showToast } from "../toast.js";
+import { escapeHtml } from "../api.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
 export function renderContact(contact) {
   const list = document.getElementById("contactList");
   list.innerHTML = `
-    <li><span>Email</span><span>${contact.email} <span class="copy-btn" id="copyEmail">Copy</span></span></li>
-    <li><span>Location</span><span>${contact.location}</span></li>
-    <li><span>LinkedIn</span><span>${contact.linkedin}</span></li>
-    <li><span>GitHub</span><span>${contact.github}</span></li>
-    <li><span>Availability</span><span>${contact.availability}</span></li>`;
+    <li><span>Email</span><span>${escapeHtml(contact.email)} <span class="copy-btn" id="copyEmail">Copy</span></span></li>
+    <li><span>Location</span><span>${escapeHtml(contact.location)}</span></li>
+    <li><span>LinkedIn</span><span>${escapeHtml(contact.linkedin)}</span></li>
+    <li><span>GitHub</span><span>${escapeHtml(contact.github)}</span></li>
+    <li><span>Availability</span><span>${escapeHtml(contact.availability)}</span></li>`;
 
   document.getElementById("copyEmail").addEventListener("click", () => {
     navigator.clipboard.writeText(contact.email);

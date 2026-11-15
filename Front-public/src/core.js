@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { escapeHtml } from "./api.js";
 gsap.registerPlugin(ScrollTrigger);
 
 export function initCore() {
@@ -77,15 +78,15 @@ export function initSearch(content) {
 
   function renderResults(term) {
     const t = term.trim().toLowerCase();
-    const matches = t === "" ? index.slice(0, 6) : index.filter((i) => i.name.toLowerCase().includes(t));
+    const matches = t === "" ? index.slice(0, 6) : index.filter((i) => (i.name || "").toLowerCase().includes(t));
 
     if (!matches.length) {
-      results.innerHTML = `<div class="search-empty">No results for "${term}"</div>`;
+      results.innerHTML = `<div class="search-empty">No results for "${escapeHtml(term)}"</div>`;
       return;
     }
 
     results.innerHTML = matches
-      .map((m, i) => `<div class="search-result-item ${i === 0 ? "active" : ""}" data-target="${m.target}"><span class="rname">${m.name}</span><span class="rtype">${m.type}</span></div>`)
+      .map((m, i) => `<div class="search-result-item ${i === 0 ? "active" : ""}" data-target="${m.target}"><span class="rname">${escapeHtml(m.name)}</span><span class="rtype">${m.type}</span></div>`)
       .join("");
 
     results.querySelectorAll(".search-result-item").forEach((item) => {

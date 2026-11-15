@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { defineModel } from "../../config/db.js";
 
 const contentSchema = new mongoose.Schema({
   site: {
@@ -62,4 +63,4 @@ const contentSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("Content", contentSchema);
+export default defineModel("Content", contentSchema);

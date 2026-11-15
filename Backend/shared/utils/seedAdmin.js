@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import { hashPassword } from "./password.js";
 import User from "../models/User.js";
 export async function seedAdmin() {
   const userCount = await User.countDocuments();
@@ -9,7 +9,7 @@ export async function seedAdmin() {
     return;
   }
 
-  const passwordHash = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
+  const passwordHash = await hashPassword(process.env.ADMIN_PASSWORD);
   await User.create({ email: process.env.ADMIN_EMAIL, passwordHash });
   console.log("Admin account seeded from .env");
 }

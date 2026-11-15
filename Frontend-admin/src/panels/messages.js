@@ -1,4 +1,4 @@
-import { apiFetch } from "../api.js";
+import { apiFetch, escapeHtml } from "../api.js";
 import { showToast } from "../toast.js";
 
 export async function renderMessagesPanel() {
@@ -16,11 +16,11 @@ export async function renderMessagesPanel() {
 
     list.innerHTML = messages
       .map((m) => `
-        <div class="list-row" data-id="${m._id}">
+        <div class="list-row" data-id="${escapeHtml(m._id)}">
           <div class="list-fields">
-            <b>${m.name}</b> — <span style="color:var(--text-soft);">${m.email}</span>
+            <b>${escapeHtml(m.name)}</b> — <span style="color:var(--text-soft);">${escapeHtml(m.email)}</span>
             <div class="hint">${new Date(m.createdAt).toLocaleString()}</div>
-            <p style="margin-top:6px; font-size:.86rem;">${m.message}</p>
+            <p style="margin-top:6px; font-size:.86rem;">${escapeHtml(m.message)}</p>
           </div>
           <button class="remove-btn">Delete</button>
         </div>`)
