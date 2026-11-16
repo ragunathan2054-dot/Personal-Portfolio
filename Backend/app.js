@@ -34,7 +34,8 @@ export function createApp() {
     },
     credentials: true,
   }));
-  app.use(express.json({ limit: "100kb" }));
+  // Every admin save sends the whole portfolio content (~50 KB today), so leave room to grow.
+  app.use(express.json({ limit: "300kb" }));
   app.use(cookieParser());
   app.use(sanitizeMiddleware);
   app.use(hppMiddleware);

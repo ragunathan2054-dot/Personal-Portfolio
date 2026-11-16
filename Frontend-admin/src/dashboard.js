@@ -53,8 +53,11 @@ function syncSidebarLogo() {
 window.__saveContent = async (partial, successMessage = "Saved successfully") => {
   const pill = document.getElementById("statusPill");
   try {
-    currentContent = { ...currentContent, ...partial };
-    const updated = await apiFetch("/content", { method: "PUT", body: JSON.stringify(currentContent) });
+    // Only keep the change locally once the server has accepted it. Otherwise a
+    // rejected save (e.g. one section invalid) would be re-sent with every later
+    // save and make all of them fail.
+    const next = { ...currentContent, ...partial };
+    const updated = await apiFetch("/content", { method: "PUT", body: JSON.stringify(next) });
     currentContent = updated;
     syncSidebarLogo();
     pill.classList.remove("error");

@@ -59,11 +59,13 @@ router.put("/auth/email", requireAuth, verifyCsrfToken,
 router.get("/content", requireAuth, h(getContentForEdit));
 
 router.put("/content", requireAuth, verifyCsrfToken,
-  body("hero.headline").optional().isString().trim().isLength({ max: 200 }),
-  body("hero.description").optional().isString().trim().isLength({ max: 500 }),
-  body("skills").optional().isArray({ max: 60 }),
-  body("projects").optional().isArray({ max: 30 }),
-  body("certificates").optional().isArray({ max: 30 }),
+  body("hero.headline").optional().isString().trim().isLength({ max: 200 })
+    .withMessage("Headline is too long (max 200 characters)."),
+  body("hero.description").optional().isString().trim().isLength({ max: 500 })
+    .withMessage("Hero description is too long (max 500 characters)."),
+  body("skills").optional().isArray({ max: 150 }).withMessage("Too many skills (max 150)."),
+  body("projects").optional().isArray({ max: 50 }).withMessage("Too many projects (max 50)."),
+  body("certificates").optional().isArray({ max: 100 }).withMessage("Too many certificates (max 100)."),
   validate, h(updateContent)
 );
 
