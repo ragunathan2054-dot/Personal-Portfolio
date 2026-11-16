@@ -35,6 +35,9 @@
   "vars": {
     "NODE_ENV": "production"
   },
+  // Keep variables added in the Cloudflare dashboard when deploying from GitHub
+  // (without this, every deploy deletes dashboard "Text" variables).
+  "keep_vars": true,
 
   // Free Workers Logs, so errors are visible in the Cloudflare dashboard.
   "observability": { "enabled": true }
