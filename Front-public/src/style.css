@@ -338,3 +338,12 @@ footer p{ font-size:.8rem; color:var(--text-soft); }
   object-fit:cover;
   border-radius:28px; /* matches .id-card's own border-radius exactly */
 }
+
+/* Clickable contact links (email, LinkedIn, GitHub) */
+#contactList a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+#contactList a:hover { color: var(--accent); }

@@ -8,8 +8,11 @@ import { baseCookieOptions } from "../shared/utils/cookies.js";
 const PENDING_2FA_COOKIE = "twofa_pending";
 
 function signToken(userId) {
+  if (!process.env.JWT_SECRET) {
+    throw new Error("JWT_SECRET is not set — add it to the backend's environment variables.");
+  }
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    expiresIn: process.env.JWT_EXPIRES_IN || "1h",
     algorithm: "HS256",
   });
 }

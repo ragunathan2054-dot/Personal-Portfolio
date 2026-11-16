@@ -11,13 +11,13 @@ export function renderHeroPanel(content) {
 
     <div class="card">
       <div class="card-head"><h3>Site branding</h3><span class="sub">Nav logo &amp; hero photo</span></div>
-      <div class="field"><label>Nav logo text (top left)</label><input type="text" id="site-logo" value="${escapeHtml(site.logoText || "AK")}"></div>
+      <div class="field"><label>Nav logo text (top left)</label><input type="text" id="site-logo" value="${escapeHtml(site.logoText || "RN")}"></div>
 
       <div class="field">
         <label>Hero photo</label>
         <div class="avatar-row">
           <div id="heroPhotoPreview" style="width:64px; height:64px; border-radius:50%; overflow:hidden; background:var(--brown-dark); color:#fff; display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:1.1rem; flex-shrink:0;">
-            ${site.heroPhotoUrl ? `<img src="${escapeHtml(site.heroPhotoUrl)}" style="width:100%; height:100%; object-fit:cover;">` : escapeHtml(site.heroBadgeText || "AK")}
+            ${site.heroPhotoUrl ? `<img src="${escapeHtml(site.heroPhotoUrl)}" style="width:100%; height:100%; object-fit:cover;">` : escapeHtml(site.heroBadgeText || "RN")}
           </div>
           <div>
             <input type="file" id="heroPhotoInput" accept="image/jpeg,image/png,image/webp" style="display:none;">
@@ -28,7 +28,7 @@ export function renderHeroPanel(content) {
         <div class="hint">Upload a square photo (800×800px or larger works best) — it fills the box automatically.</div>
       </div>
 
-      <div class="field"><label>Badge text (shown when there's no photo)</label><input type="text" id="site-badge" value="${escapeHtml(site.heroBadgeText || "AK")}"></div>
+      <div class="field"><label>Badge text (shown when there's no photo)</label><input type="text" id="site-badge" value="${escapeHtml(site.heroBadgeText || "RN")}"></div>
     </div>
 
     <div class="card">
@@ -145,7 +145,7 @@ export function renderHeroPanel(content) {
   });
   document.getElementById("removePhotoBtn").addEventListener("click", () => {
     heroPhotoUrl = "";
-    document.getElementById("heroPhotoPreview").textContent = document.getElementById("site-badge").value || "AK";
+    document.getElementById("heroPhotoPreview").textContent = document.getElementById("site-badge").value || "RN";
     document.getElementById("removePhotoBtn").style.display = "none";
     showToast("Photo removed — click Save to apply");
   });

@@ -1,15 +1,25 @@
 import { showToast } from "../toast.js";
-import { escapeHtml } from "../api.js";
+import { escapeHtml, safeUrl, normalizeUrl } from "../api.js";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+// Clickable link showing a short label ("linkedin.com/in/name"), or plain
+// text if the value isn't a usable link.
+function profileLink(value) {
+  const url = safeUrl(normalizeUrl(value), "");
+  if (!url) return escapeHtml(value);
+  const label = url.replace(/^https?:\/\/(www\.)?/i, "").replace(/(\.git)?\/?$/, "");
+  return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+}
+
 export function renderContact(contact) {
   const list = document.getElementById("contactList");
+  const email = String(contact.email || "").trim();
   list.innerHTML = `
-    <li><span>Email</span><span>${escapeHtml(contact.email)} <span class="copy-btn" id="copyEmail">Copy</span></span></li>
+    <li><span>Email</span><span><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a> <span class="copy-btn" id="copyEmail">Copy</span></span></li>
     <li><span>Location</span><span>${escapeHtml(contact.location)}</span></li>
-    <li><span>LinkedIn</span><span>${escapeHtml(contact.linkedin)}</span></li>
-    <li><span>GitHub</span><span>${escapeHtml(contact.github)}</span></li>
+    <li><span>LinkedIn</span><span>${profileLink(contact.linkedin)}</span></li>
+    <li><span>GitHub</span><span>${profileLink(contact.github)}</span></li>
     <li><span>Availability</span><span>${escapeHtml(contact.availability)}</span></li>`;
 
   document.getElementById("copyEmail").addEventListener("click", () => {

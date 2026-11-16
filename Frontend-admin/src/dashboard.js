@@ -46,7 +46,7 @@ document.querySelectorAll(".navlist button[data-panel]").forEach((btn) =>
 );
 
 function syncSidebarLogo() {
-  const text = currentContent?.site?.logoText || "AK";
+  const text = currentContent?.site?.logoText || "RN";
   document.getElementById("sidebarLogoMark").textContent = text;
 }
 

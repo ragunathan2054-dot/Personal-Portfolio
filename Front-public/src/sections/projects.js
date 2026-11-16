@@ -1,4 +1,4 @@
-import { escapeHtml, safeUrl } from "../api.js";
+import { escapeHtml, safeUrl, normalizeUrl } from "../api.js";
 
 const VISIBLE_COUNT = 3;
 
@@ -13,6 +13,13 @@ export function renderProjects(projects) {
   displayOrder.forEach((p, i) => {
     const card = document.createElement("div");
     card.className = "project-card";
+    // Only show a link when it points somewhere real.
+    const demo = safeUrl(normalizeUrl(p.demo), "");
+    const repo = safeUrl(normalizeUrl(p.repo), "");
+    const links = [
+      demo && `<a href="${escapeHtml(demo)}" target="_blank" rel="noopener noreferrer">Live Demo →</a>`,
+      repo && `<a href="${escapeHtml(repo)}" target="_blank" rel="noopener noreferrer">GitHub →</a>`,
+    ].filter(Boolean).join("");
     card.innerHTML = `
       <div class="p-top">
         <div>
@@ -39,10 +46,7 @@ export function renderProjects(projects) {
             <h4 style="margin-top:14px;">Solution</h4><p>${escapeHtml(p.solution)}</p>
           </div>
         </div>
-        <div class="p-links">
-          <a href="${escapeHtml(safeUrl(p.demo))}">Live Demo →</a>
-          <a href="${escapeHtml(safeUrl(p.repo))}">GitHub →</a>
-        </div>
+        ${links ? `<div class="p-links">${links}</div>` : ""}
       </div>
     `;
     card.addEventListener("click", () => {

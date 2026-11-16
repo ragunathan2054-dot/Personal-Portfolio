@@ -3,9 +3,9 @@ import { defineModel } from "../../config/db.js";
 
 const contentSchema = new mongoose.Schema({
   site: {
-    logoText: { type: String, default: "AK" },
+    logoText: { type: String, default: "RN" },
     logoImageUrl: { type: String, default: "" },
-    heroBadgeText: { type: String, default: "AK" },
+    heroBadgeText: { type: String, default: "RN" },
     heroPhotoUrl: { type: String, default: "" },
   },
   hero: {

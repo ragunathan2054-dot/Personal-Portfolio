@@ -1,5 +1,5 @@
 export function renderBranding(site = {}) {
-  document.getElementById("navLogo").textContent = site.logoText || "AK";
+  document.getElementById("navLogo").textContent = site.logoText || "RN";
 
   const svg = document.getElementById("idSvg");
   const photo = document.getElementById("idPhotoFull");
@@ -12,6 +12,6 @@ export function renderBranding(site = {}) {
     svg.style.display = "block";
     photo.style.display = "none";
     photo.src = "";
-    document.getElementById("heroBadgeText").textContent = site.heroBadgeText || "AK";
+    document.getElementById("heroBadgeText").textContent = site.heroBadgeText || "RN";
   }
 }

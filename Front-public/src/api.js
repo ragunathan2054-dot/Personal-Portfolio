@@ -26,6 +26,17 @@ export function safeUrl(url, fallback = "#") {
   return /^(https?:\/\/|mailto:|tel:|#|\/(?!\/))/i.test(u) ? u : fallback;
 }
 
+// Adds https:// to links typed without it ("www.linkedin.com/in/x" ->
+// "https://www.linkedin.com/in/x") and removes spaces (e.g. in wa.me numbers).
+// Empty or "#" stays empty.
+export function normalizeUrl(url) {
+  let u = String(url || "").trim();
+  if (!u || u === "#") return "";
+  if (/^(https?:|mailto:|tel:)/i.test(u)) return u.replace(/\s+/g, "");
+  if (/^[\w-]+(\.[\w-]+)+(\/|$)/.test(u)) return "https://" + u.replace(/\s+/g, "");
+  return u;
+}
+
 // The hero headline allows a few formatting tags (e.g. <em>accent</em>).
 // Everything is escaped, then only bare <em>, <strong>, <b>, <i>, <br> tags
 // (no attributes) are turned back into HTML.
