@@ -45,6 +45,27 @@ navLinksEl.querySelectorAll("a").forEach((link) =>
 );
 }
 
+// Short entrance animation for the hero on first load (~0.8s). It plays while
+// the content is being fetched, so it never delays anything. Skipped for
+// visitors who prefer reduced motion.
+export function playHeroIntro() {
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  gsap.from(["#heroEyebrow", "#heroHeadline", ".rotating-wrap", "#heroDesc", "#heroButtons"], {
+    autoAlpha: 0,
+    y: 26,
+    duration: 0.7,
+    ease: "power3.out",
+    stagger: 0.09,
+    clearProps: "transform,opacity,visibility",
+  });
+  gsap.from("#navbar", { autoAlpha: 0, y: -12, duration: 0.6, ease: "power2.out", clearProps: "transform,opacity,visibility" });
+}
+
+// Call after content renders: the page got taller, so scroll positions changed.
+export function refreshReveal() {
+  ScrollTrigger.refresh();
+}
+
 export function initReveal() {
   document.querySelectorAll(".reveal").forEach((el) => {
     gsap.fromTo(

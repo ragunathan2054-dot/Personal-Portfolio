@@ -2,7 +2,8 @@ const API_URL = (
   import.meta.env.VITE_API_URL || "http://localhost:5000/api/public"
 ).replace(/\/$/, "");
 export async function fetchContent() {
-  const res = await fetch(`${API_URL}/content`);
+  // Give up after 15s so the visitor sees a Retry option instead of waiting forever.
+  const res = await fetch(`${API_URL}/content`, { signal: AbortSignal.timeout(15000) });
   if (!res.ok) throw new Error("Could not load portfolio content");
   return res.json();
 }
