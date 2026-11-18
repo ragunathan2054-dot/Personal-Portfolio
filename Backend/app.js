@@ -10,7 +10,7 @@ import { issueCsrfToken } from "./private/middleware/csrf.js";
 
 import publicRoutes from "./public/public.routes.js";
 import privateRoutes from "./private/private.routes.js";
-function allowedOrigins() {
+export function allowedOrigins() {
   return [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN]
     .filter(Boolean)
     .flatMap((v) => v.split(","))

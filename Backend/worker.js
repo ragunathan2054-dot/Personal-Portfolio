@@ -6,9 +6,10 @@
 // and httpServerHandler() turns incoming Worker requests into Node requests.
 import { httpServerHandler } from "cloudflare:node";
 
-import { createApp } from "./app.js";
+import { createApp, allowedOrigins } from "./app.js";
 import { runWithRequestDb } from "./config/db.js";
 import { seedAdmin } from "./shared/utils/seedAdmin.js";
+import { handleUpload } from "./private/upload.worker.js";
 
 const PORT = 3000; // internal only, never exposed
 
@@ -22,7 +23,14 @@ let adminSeedChecked = false;
 export default {
   async fetch(request, env, ctx) {
     return runWithRequestDb(env.MONGO_URI, async () => {
-      if (!adminSeedChecked && new URL(request.url).pathname === "/api/private/auth/login") {
+      const { pathname } = new URL(request.url);
+
+      // File uploads use a native handler (much less CPU than Express + multer).
+      if (request.method === "POST" && pathname === "/api/private/upload") {
+        return handleUpload(request, allowedOrigins());
+      }
+
+      if (!adminSeedChecked && pathname === "/api/private/auth/login") {
         try {
           await seedAdmin();
           adminSeedChecked = true;
