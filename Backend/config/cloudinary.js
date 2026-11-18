@@ -1,10 +1,5 @@
 import crypto from "node:crypto";
 
-// Uploads go straight to Cloudinary's signed Upload API using fetch, which
-// works the same on Node and on Cloudflare Workers (the Cloudinary Node SDK
-// depends on Node streams and http internals that Workers only partly support).
-// Docs: https://cloudinary.com/documentation/upload_images#generating_authentication_signatures
-
 function getConfig() {
   const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
   if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
@@ -25,8 +20,6 @@ export function signParams(params, apiSecret) {
   return crypto.createHash("sha1").update(toSign + apiSecret).digest("hex");
 }
 
-// buffer: file contents; options: { folder, resource_type, public_id? }
-// Resolves to Cloudinary's upload result (includes secure_url).
 export async function uploadBuffer(buffer, { resource_type = "image", mimetype, filename, ...params }) {
   const { cloudName, apiKey, apiSecret } = getConfig();
   const signedParams = { ...params, timestamp: Math.floor(Date.now() / 1000) };

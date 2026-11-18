@@ -12,7 +12,6 @@ import { renderContact } from "./sections/contact.js";
 initCore();
 showSkeletons();
 playHeroIntro();
-// Section headings animate in on scroll right away, not only after data loads.
 initReveal();
 
 function load() {

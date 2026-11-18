@@ -1,9 +1,3 @@
-// Loading placeholders ("skeletons") shown while portfolio content is fetched,
-// plus a small "couldn't load" message with a Retry button.
-//
-// Each skeleton is put inside the same container the real content goes into.
-// The section renderers replace the container's contents, so the skeletons
-// disappear on their own once data arrives.
 
 const line = (cls = "") => `<span class="sk sk-line ${cls}"></span>`;
 const card = () =>

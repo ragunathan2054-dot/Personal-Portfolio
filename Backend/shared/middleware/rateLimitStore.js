@@ -1,11 +1,5 @@
-// In-memory store for express-rate-limit that needs no background timer.
-//
-// The library's default MemoryStore starts a cleanup setInterval() as soon as
-// it is created. Cloudflare Workers forbid timers at module load time, so that
-// crashes the Worker on startup. This store behaves the same (fixed window per
-// key) but cleans up expired entries lazily instead. Works on Node too.
+
 export class LazyMemoryStore {
-  // Tells express-rate-limit that counts are local to this process/instance.
   localKeys = true;
 
   init(options) {

@@ -6,7 +6,7 @@ export function issueCsrfToken(req, res, next) {
 
   res.cookie("XSRF-TOKEN", token, {
     ...baseCookieOptions(),
-    httpOnly: false, // the admin site reads it and echoes it back in X-CSRF-Token
+    httpOnly: false, 
   });
 
   next();

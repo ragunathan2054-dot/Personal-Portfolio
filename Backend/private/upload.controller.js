@@ -27,6 +27,6 @@ export async function uploadImage(req, res, next) {
     res.json({ url: result.secure_url });
   } catch (err) {
     console.error("Cloudinary upload error:", err.message);
-    next(err);
+    res.status(502).json({ error: `Upload failed: ${err.message}` });
   }
 }

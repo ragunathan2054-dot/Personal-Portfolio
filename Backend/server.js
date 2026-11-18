@@ -1,5 +1,4 @@
-// Node.js entry point — used by Render and by `npm run dev` locally.
-// The Cloudflare Workers entry point is worker.js; both share app.js.
+
 import "dotenv/config";
 
 import { createApp } from "./app.js";

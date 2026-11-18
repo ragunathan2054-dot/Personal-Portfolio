@@ -10,9 +10,6 @@ import { issueCsrfToken } from "./private/middleware/csrf.js";
 
 import publicRoutes from "./public/public.routes.js";
 import privateRoutes from "./private/private.routes.js";
-
-// PUBLIC_ORIGIN / ADMIN_ORIGIN may each hold one origin or a comma-separated
-// list. Trailing slashes are ignored so "https://site.com/" still matches.
 function allowedOrigins() {
   return [process.env.PUBLIC_ORIGIN, process.env.ADMIN_ORIGIN]
     .filter(Boolean)
