@@ -1,6 +1,13 @@
-import { escapeHtml as esc } from "../api.js";
+import { escapeHtml as esc, uploadFile } from "../api.js";
+import { showToast } from "../toast.js";
 
 const MAX_SKILLS = 8;
+
+// Small preview next to the logo field (only real http(s) links are shown).
+function logoPreview(url) {
+  const u = String(url || "").trim();
+  return /^https?:\/\//i.test(u) ? `<img src="${esc(u)}" alt="">` : "—";
+}
 
 const blankCertificate = () => ({
   name: "", issuer: "", credentialId: "", issued: "", expiry: "", logoUrl: "", credentialUrl: "",
@@ -121,10 +128,21 @@ export function renderCertificatesPanel(content) {
             <div class="field"><label>Verify URL</label><input type="url" data-k="credentialUrl" value="${esc(c.credentialUrl)}" placeholder="https://www.credly.com/badges/...">
               <div class="hint">Where "Verify" on the public site sends visitors.</div></div>
             <div class="row2">
-              <div class="field"><label>Certificate URL</label><input type="url" data-k="certificateUrl" value="${esc(c.certificateUrl)}" placeholder="https://…/certificate.pdf">
-                <div class="hint">Link to the certificate image or PDF.</div></div>
-              <div class="field"><label>Logo URL</label><input type="url" data-k="logoUrl" value="${esc(c.logoUrl)}" placeholder="https://…/logo.png">
-                <div class="hint">Optional issuer logo or badge image.</div></div>
+              <div class="field"><label>Certificate (PDF or image)</label>
+                <div class="upload-row">
+                  <input type="url" data-k="certificateUrl" value="${esc(c.certificateUrl)}" placeholder="Upload a file or paste a link">
+                  <button type="button" class="btn btn-ghost btn-sm" data-upload="certificateUrl">Upload</button>
+                  <input type="file" hidden accept="application/pdf,image/jpeg,image/png,image/webp" data-file="certificateUrl">
+                </div>
+                <div class="hint" data-status="certificateUrl">PDF, JPG, PNG or WEBP, max 5 MB.</div></div>
+              <div class="field"><label>Issuer logo</label>
+                <div class="upload-row">
+                  <span class="logo-preview" data-logo-preview>${logoPreview(c.logoUrl)}</span>
+                  <input type="url" data-k="logoUrl" value="${esc(c.logoUrl)}" placeholder="Upload a logo or paste a link">
+                  <button type="button" class="btn btn-ghost btn-sm" data-upload="logoUrl">Upload</button>
+                  <input type="file" hidden accept="image/png,image/jpeg,image/webp" data-file="logoUrl">
+                </div>
+                <div class="hint" data-status="logoUrl">PNG, JPG or WEBP (square works best). Empty = issuer code badge.</div></div>
             </div>
             <div class="switch-row">
               <div class="label"><b>Visible on public site</b><span>Turn off to hide it without deleting it.</span></div>
@@ -172,9 +190,42 @@ export function renderCertificatesPanel(content) {
     item.querySelectorAll("[data-k]").forEach((f) =>
       f.addEventListener("input", () => {
         c[f.dataset.k] = f.dataset.k === "order" ? (f.value === "" ? null : Number(f.value)) : f.value;
+        if (f.dataset.k === "logoUrl") item.querySelector("[data-logo-preview]").innerHTML = logoPreview(f.value);
         refreshHead(item, c);
       })
     );
+
+    // Upload buttons: pick a file -> it's uploaded to Cloudinary -> its link is
+    // filled in. Click Save afterwards to keep it (same as the Hero photo).
+    item.querySelectorAll("[data-upload]").forEach((btn) => {
+      const key = btn.dataset.upload;
+      const picker = item.querySelector(`[data-file="${key}"]`);
+      const status = item.querySelector(`[data-status="${key}"]`);
+      const defaultHint = status.textContent;
+      btn.addEventListener("click", (e) => { e.stopPropagation(); picker.click(); });
+      picker.addEventListener("change", async () => {
+        const file = picker.files[0];
+        picker.value = ""; // allow picking the same file again later
+        if (!file) return;
+        btn.disabled = true;
+        btn.textContent = "Uploading…";
+        status.textContent = `Uploading ${file.name}…`;
+        try {
+          const url = await uploadFile(file);
+          c[key] = url;
+          item.querySelector(`[data-k="${key}"]`).value = url;
+          if (key === "logoUrl") item.querySelector("[data-logo-preview]").innerHTML = logoPreview(url);
+          status.textContent = "Uploaded. Click Save to keep it.";
+          showToast(`${key === "logoUrl" ? "Logo" : "Certificate"} uploaded — click Save to apply`);
+        } catch (err) {
+          status.textContent = defaultHint;
+          showToast(err.message, "error");
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Upload";
+        }
+      });
+    });
 
     item.querySelector("[data-visible]").addEventListener("change", (e) => {
       c.isVisible = e.target.checked;

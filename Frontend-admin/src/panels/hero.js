@@ -1,5 +1,5 @@
 import { showToast } from "../toast.js";
-import { escapeHtml } from "../api.js";
+import { escapeHtml, uploadFile } from "../api.js";
 
 export function renderHeroPanel(content) {
   const hero = content.hero || {};
@@ -112,10 +112,6 @@ export function renderHeroPanel(content) {
     renderButtons();
   });
 
-  function getCookie(name) {
-    return document.cookie.split("; ").find((r) => r.startsWith(name + "="))?.split("=")[1];
-  }
-
   // Photo upload
   document.getElementById("uploadPhotoBtn").addEventListener("click", () => {
     document.getElementById("heroPhotoInput").click();
@@ -123,19 +119,8 @@ export function renderHeroPanel(content) {
   document.getElementById("heroPhotoInput").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const formData = new FormData();
-    formData.append("image", file);
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const res = await fetch(`${API_URL}/upload`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "X-CSRF-Token": getCookie("XSRF-TOKEN") },
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      heroPhotoUrl = data.url;
+      heroPhotoUrl = await uploadFile(file);
       document.getElementById("heroPhotoPreview").innerHTML = `<img src="${escapeHtml(heroPhotoUrl)}" style="width:100%; height:100%; object-fit:cover;">`;
       document.getElementById("removePhotoBtn").style.display = "inline-block";
       showToast("Photo uploaded — click Save to apply");
@@ -157,19 +142,8 @@ export function renderHeroPanel(content) {
   document.getElementById("resumeInput").addEventListener("change", async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const formData = new FormData();
-    formData.append("image", file); // field name stays "image" — the backend route accepts any file here, filtered by mimetype
     try {
-      const API_URL = import.meta.env.VITE_API_URL;
-      const res = await fetch(`${API_URL}/upload`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "X-CSRF-Token": getCookie("XSRF-TOKEN") },
-        body: formData,
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      resumeUrl = data.url;
+      resumeUrl = await uploadFile(file);
       document.getElementById("resumeStatus").innerHTML = `Current file: <a href="${escapeHtml(resumeUrl)}" target="_blank" rel="noopener noreferrer" style="color:var(--brown-dark);">view current resume</a>`;
       showToast("Resume uploaded — click Save to apply");
     } catch (err) {

@@ -46,6 +46,35 @@ export async function apiFetch(path, options = {}) {
   return data;
 }
 
+// Uploads one file (JPG/PNG/WEBP image or PDF, max 5 MB) to Cloudinary through
+// the backend and returns its public URL. Errors come back as readable messages.
+export const UPLOAD_MAX_BYTES = 5 * 1024 * 1024;
+export async function uploadFile(file) {
+  if (file.size > UPLOAD_MAX_BYTES) throw new Error("File is too large (max 5 MB).");
+  const form = new FormData();
+  form.append("image", file); // the backend's upload field is called "image" for every file type
+
+  let res;
+  try {
+    res = await fetch(`${API_URL}/upload`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "X-CSRF-Token": getCookie("XSRF-TOKEN") },
+      body: form,
+    });
+  } catch {
+    throw new Error("Upload failed: cannot reach the server.");
+  }
+  const text = await res.text();
+  let data = null;
+  try { data = JSON.parse(text); } catch { /* not JSON, e.g. a Cloudflare error page */ }
+  if (res.status === 401) throw new Error("Your session expired. Sign in again, then retry the upload.");
+  if (!res.ok || !data?.url) {
+    throw new Error(data?.error || `Upload failed (server returned status ${res.status}). Try again in a moment.`);
+  }
+  return data.url;
+}
+
 // Escapes text for safe use inside HTML, including inside attribute values
 // ("..." and '...'). null/undefined become "".
 export function escapeHtml(str) {

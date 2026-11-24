@@ -190,3 +190,11 @@ a{ color:inherit; text-decoration:none; }
 .field .tag-input input{ all:unset; flex:1; min-width:160px; font-family:var(--sans); font-size:.86rem; padding:4px; color:var(--text); }
 .field .tag-input input:disabled{ color:var(--text-faint); }
 @media (max-width:640px){ .cert-badges{ display:none; } }
+
+/* Certificate form: link field + Upload button (+ logo preview) */
+.upload-row{ display:flex; align-items:center; gap:8px; }
+.upload-row input[type=url]{ flex:1; min-width:0; }
+.upload-row .btn{ flex-shrink:0; }
+.upload-row .btn:disabled{ opacity:.6; cursor:progress; }
+.logo-preview{ width:40px; height:40px; flex-shrink:0; border-radius:10px; border:1px solid var(--border); background:#fff; display:flex; align-items:center; justify-content:center; overflow:hidden; color:var(--text-faint); font-size:.8rem; }
+.logo-preview img{ width:100%; height:100%; object-fit:contain; padding:4px; }
