@@ -7,7 +7,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="/src/style.css">
 </head>
@@ -116,14 +116,27 @@
 
 <div class="chapter"><div class="cline">Credentials</div></div>
 
-<section id="certs" style="background:var(--bg-alt);">
-  <div class="container">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Verified Credentials</div>
-      <h2>Certifications, verified.</h2>
-      <p>Click a card to flip and see the credential details.</p>
+<section id="certs" class="cx" aria-labelledby="certsTitle">
+  <div class="cx-wrap">
+    <header class="cx-head reveal">
+      <div class="cx-head-text">
+        <div class="cx-eyebrow">04 — Certificates</div>
+        <h2 class="cx-title" id="certsTitle">Certifications</h2>
+        <p class="cx-lede">Pick a credential from the list to see its details and verify it with the issuer.</p>
+      </div>
+      <div class="cx-counter" id="certCounter" aria-live="polite">00 / 00</div>
+    </header>
+
+    <div class="cx-body">
+      <div class="cx-listcol">
+        <div class="cx-list" id="certList" aria-label="Certificates"></div>
+        <div class="cx-hint" id="certHint" hidden>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.5v10m0 0L3.5 8M8 12.5 12.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Scroll down to see more certificates</span>
+        </div>
+      </div>
+      <article class="cx-detail" id="certDetail" aria-live="polite"></article>
     </div>
-    <div class="cert-grid" id="certGrid"></div>
   </div>
 </section>
 

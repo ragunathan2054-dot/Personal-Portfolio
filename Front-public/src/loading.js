@@ -13,7 +13,8 @@ const SKELETONS = {
   aboutTimeline: () => repeat(3, () => `<div style="margin-bottom:22px">${line("tiny")}<span class="sk sk-title"></span>${line()}</div>`),
   skillGroups: () => `<div class="sk-grid">${repeat(6, card)}</div>`,
   projectList: () => repeat(3, () => `<div class="sk-project">${card()}</div>`),
-  certGrid: () => repeat(6, card),
+  certList: () => repeat(6, () => `<div class="sk-card" style="border-radius:18px;padding:16px 20px">${line("short")}${line("tiny")}</div>`),
+  certDetail: () => `<span class="sk sk-title"></span>${line()}${line("short")}${line()}${line("tiny")}`,
   contactList: () => repeat(5, () => `<li>${line("tiny")}${line("short")}</li>`),
 };
 

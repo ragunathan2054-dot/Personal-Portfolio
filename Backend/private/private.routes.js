@@ -18,6 +18,37 @@ import { asyncHandler as h } from "../shared/utils/asyncHandler.js";
 
 const router = express.Router();
 
+// Per-certificate checks (each item in the certificates list). Empty optional
+// fields are fine; anything filled in must be valid.
+const URL_RULES = { protocols: ["http", "https"], require_protocol: true };
+const optionalText = (field, label, max) =>
+  body(`certificates.*.${field}`).optional({ values: "null" }).isString().trim()
+    .isLength({ max }).withMessage(`${label} is too long (max ${max} characters).`);
+const optionalUrl = (field, label) =>
+  body(`certificates.*.${field}`).optional({ values: "falsy" }).isString().trim()
+    .isURL(URL_RULES).withMessage(`${label} must be a full link starting with https://`);
+
+const certificateRules = [
+  optionalText("name", "Title", 200),
+  optionalText("issuer", "Issuer", 120),
+  optionalText("credentialId", "Credential ID", 120),
+  optionalText("issued", "Issued date", 40),
+  optionalText("expiry", "Expires", 40),
+  optionalText("kind", "Course type", 80),
+  optionalText("issuerCode", "Issuer code", 8),
+  optionalUrl("credentialUrl", "Verify URL"),
+  optionalUrl("certificateUrl", "Certificate URL"),
+  optionalUrl("logoUrl", "Logo URL"),
+  body("certificates.*.skills").optional({ values: "null" })
+    .isArray({ max: 8 }).withMessage("At most 8 skill tags."),
+  body("certificates.*.skills.*").isString().trim()
+    .isLength({ min: 1, max: 40 }).withMessage("Each skill tag must be 1–40 characters."),
+  body("certificates.*.order").optional({ values: "null" })
+    .isInt({ min: 0, max: 9999 }).withMessage("Order must be a whole number (0–9999).").toInt(),
+  body("certificates.*.isVisible").optional({ values: "null" })
+    .isBoolean().withMessage("Visible must be on or off.").toBoolean(),
+];
+
 
 router.post("/auth/login", authLimiter,
   body("email").isEmail().normalizeEmail(),
@@ -66,6 +97,7 @@ router.put("/content", requireAuth, verifyCsrfToken,
   body("skills").optional().isArray({ max: 150 }).withMessage("Too many skills (max 150)."),
   body("projects").optional().isArray({ max: 50 }).withMessage("Too many projects (max 50)."),
   body("certificates").optional().isArray({ max: 100 }).withMessage("Too many certificates (max 100)."),
+  ...certificateRules,
   validate, h(updateContent)
 );
 

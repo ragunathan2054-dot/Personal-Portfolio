@@ -34,7 +34,7 @@ export function renderProjects(projects) {
         </div>
         <div style="font-family:var(--mono); font-size:.7rem; color:var(--text-soft);">${String(i + 1).padStart(2, "0")}</div>
       </div>
-      <div class="p-body">
+      <div class="p-body"><div class="p-body-clip">
         <div class="p-body-inner">
           <div class="p-col">
             <h4>Features</h4>
@@ -47,8 +47,10 @@ export function renderProjects(projects) {
           </div>
         </div>
         ${links ? `<div class="p-links">${links}</div>` : ""}
-      </div>
+      </div></div>
     `;
+    // Opening a link shouldn't also collapse the card.
+    card.querySelectorAll(".p-links a").forEach((a) => a.addEventListener("click", (e) => e.stopPropagation()));
     card.addEventListener("click", () => {
       const wasOpen = card.classList.contains("open");
       document.querySelectorAll(".project-card").forEach((c) => c.classList.remove("open"));

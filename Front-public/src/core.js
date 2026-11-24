@@ -84,7 +84,7 @@ export function initSearch(content) {
   const index = [
     ...(content.skills || []).map((s) => ({ type: "Skill", name: s.name, target: "skills" })),
     ...(content.projects || []).map((p) => ({ type: "Project", name: p.title, target: "projects" })),
-    ...(content.certificates || []).map((c) => ({ type: "Certificate", name: c.name, target: "certs" })),
+    ...(content.certificates || []).map((c, idx) => ({ type: "Certificate", name: c.name, target: "certs", idx })),
   ];
 
   function openModal() {
@@ -107,12 +107,16 @@ export function initSearch(content) {
     }
 
     results.innerHTML = matches
-      .map((m, i) => `<div class="search-result-item ${i === 0 ? "active" : ""}" data-target="${m.target}"><span class="rname">${escapeHtml(m.name)}</span><span class="rtype">${m.type}</span></div>`)
+      .map((m, i) => `<div class="search-result-item ${i === 0 ? "active" : ""}" data-target="${m.target}"${m.idx !== undefined ? ` data-idx="${m.idx}"` : ""}><span class="rname">${escapeHtml(m.name)}</span><span class="rtype">${m.type}</span></div>`)
       .join("");
 
     results.querySelectorAll(".search-result-item").forEach((item) => {
       item.addEventListener("click", () => {
         document.getElementById(item.dataset.target).scrollIntoView({ behavior: "smooth" });
+        // A certificate result also opens that certificate in the detail panel.
+        if (item.dataset.idx !== undefined) {
+          document.dispatchEvent(new CustomEvent("certificates:select", { detail: Number(item.dataset.idx) }));
+        }
         closeModal();
       });
     });

@@ -4,6 +4,7 @@ import Message from "../shared/models/Message.js";
 export async function getContentForEdit(req, res) {
   let content = await Content.findOne();
   if (!content) content = await Content.create({});
+  res.set("Cache-Control", "no-store");
   res.json(content);
 }
 
